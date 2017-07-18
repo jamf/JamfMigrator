@@ -1,0 +1,315 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9BC01C601DFB0C07007E634E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC01C5F1DFB0C07007E634E /* AppDelegate.swift */; };
+		9BC01C621DFB0C07007E634E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC01C611DFB0C07007E634E /* ViewController.swift */; };
+		9BC01C641DFB0C07007E634E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BC01C631DFB0C07007E634E /* Assets.xcassets */; };
+		9BC01C671DFB0C07007E634E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BC01C651DFB0C07007E634E /* Main.storyboard */; };
+		9BC01C6F1DFBC564007E634E /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9BC01C6E1DFBC564007E634E /* settings.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9BC01C5C1DFB0C07007E634E /* jamf-migrator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "jamf-migrator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BC01C5F1DFB0C07007E634E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9BC01C611DFB0C07007E634E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9BC01C631DFB0C07007E634E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9BC01C661DFB0C07007E634E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		9BC01C681DFB0C07007E634E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9BC01C6E1DFBC564007E634E /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9BC01C591DFB0C07007E634E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9B8F84071E0C2D10001B0F40 /* images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = images;
+			sourceTree = "<group>";
+		};
+		9BC01C531DFB0C07007E634E = {
+			isa = PBXGroup;
+			children = (
+				9B8F84071E0C2D10001B0F40 /* images */,
+				9BC01C5E1DFB0C07007E634E /* jamf-migrator */,
+				9BC01C5D1DFB0C07007E634E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9BC01C5D1DFB0C07007E634E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9BC01C5C1DFB0C07007E634E /* jamf-migrator.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9BC01C5E1DFB0C07007E634E /* jamf-migrator */ = {
+			isa = PBXGroup;
+			children = (
+				9BC01C5F1DFB0C07007E634E /* AppDelegate.swift */,
+				9BC01C611DFB0C07007E634E /* ViewController.swift */,
+				9BC01C631DFB0C07007E634E /* Assets.xcassets */,
+				9BC01C651DFB0C07007E634E /* Main.storyboard */,
+				9BC01C681DFB0C07007E634E /* Info.plist */,
+				9BC01C6E1DFBC564007E634E /* settings.plist */,
+			);
+			path = "jamf-migrator";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9BC01C5B1DFB0C07007E634E /* jamf-migrator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9BC01C6B1DFB0C07007E634E /* Build configuration list for PBXNativeTarget "jamf-migrator" */;
+			buildPhases = (
+				9BC01C581DFB0C07007E634E /* Sources */,
+				9BC01C591DFB0C07007E634E /* Frameworks */,
+				9BC01C5A1DFB0C07007E634E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "jamf-migrator";
+			productName = "jamf-migrator";
+			productReference = 9BC01C5C1DFB0C07007E634E /* jamf-migrator.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9BC01C541DFB0C07007E634E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0810;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = jamf;
+				TargetAttributes = {
+					9BC01C5B1DFB0C07007E634E = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = PS2F6S478M;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 9BC01C571DFB0C07007E634E /* Build configuration list for PBXProject "jamf-migrator" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9BC01C531DFB0C07007E634E;
+			productRefGroup = 9BC01C5D1DFB0C07007E634E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9BC01C5B1DFB0C07007E634E /* jamf-migrator */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9BC01C5A1DFB0C07007E634E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BC01C6F1DFBC564007E634E /* settings.plist in Resources */,
+				9BC01C641DFB0C07007E634E /* Assets.xcassets in Resources */,
+				9BC01C671DFB0C07007E634E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9BC01C581DFB0C07007E634E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BC01C621DFB0C07007E634E /* ViewController.swift in Sources */,
+				9BC01C601DFB0C07007E634E /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		9BC01C651DFB0C07007E634E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9BC01C661DFB0C07007E634E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9BC01C691DFB0C07007E634E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9BC01C6A1DFB0C07007E634E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		9BC01C6C1DFB0C07007E634E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = PS2F6S478M;
+				INFOPLIST_FILE = "jamf-migrator/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jamf.jamf-migrator";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		9BC01C6D1DFB0C07007E634E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = PS2F6S478M;
+				INFOPLIST_FILE = "jamf-migrator/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jamf.jamf-migrator";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9BC01C571DFB0C07007E634E /* Build configuration list for PBXProject "jamf-migrator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9BC01C691DFB0C07007E634E /* Debug */,
+				9BC01C6A1DFB0C07007E634E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9BC01C6B1DFB0C07007E634E /* Build configuration list for PBXNativeTarget "jamf-migrator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9BC01C6C1DFB0C07007E634E /* Debug */,
+				9BC01C6D1DFB0C07007E634E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9BC01C541DFB0C07007E634E /* Project object */;
+}
