@@ -22,8 +22,27 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
 
     // Main Window
     @IBOutlet var migrator_window: NSView!
-    
     @IBOutlet weak var modeTab_TabView: NSTabView!
+    
+    // Help Window
+    @IBAction func showHelpWindow(_ sender: AnyObject) {
+        // 1
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
+        let helpWindowController = storyboard.instantiateController(withIdentifier: "Help View Controller") as! NSWindowController
+        
+        if let helpWindow = helpWindowController.window {
+            
+            // 2
+            let helpViewController = helpWindow.contentViewController as! HelpViewController
+            
+            // 3
+            let application = NSApplication.shared()
+            application.runModal(for: helpWindow)
+            // 4
+            helpWindow.close()
+        }
+    }
+
     
     // Buttons
     @IBOutlet weak var allNone_button: NSButton!
@@ -120,6 +139,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     var destCreds = ""
     
     // settings variables
+    let safeCharSet = CharacterSet.alphanumerics
     var source_jp_server: String = ""
     var source_user: String = ""
     var source_pass: String = ""
@@ -269,12 +289,13 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         // credentials check - end
         
         // set credentials - start
+        //let safeCharSet = CharacterSet.alphanumerics
         self.source_jp_server = source_jp_server_field.stringValue
-        self.source_user = source_user_field.stringValue
-        self.source_pass = source_pwd_field.stringValue
-        self.dest_jp_server = dest_jp_server_field.stringValue
-        self.dest_user = dest_user_field.stringValue
-        self.dest_pass = dest_pwd_field.stringValue
+        self.source_user = source_user_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
+        self.source_pass = source_pwd_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
+        
+        self.dest_user = dest_user_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
+        self.dest_pass = dest_pwd_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
         
         // server is reachable - start
         if !(checkURL(theUrl: self.source_jp_server) == 0) {
@@ -448,8 +469,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             wipe_data = true
             
             self.dest_jp_server = dest_jp_server_field.stringValue
-            self.dest_user = dest_user_field.stringValue
-            self.dest_pass = dest_pwd_field.stringValue
+            self.dest_user = dest_user_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
+            self.dest_pass = dest_pwd_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
             migrateOrWipe = "----------- Starting To Wipe Data -----------\n"
         } else {
             NSLog("Migrating data from \(source_jp_server_field.stringValue) to \(dest_jp_server_field.stringValue).")

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.WebKit2IBPlugin" version="12121"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -642,7 +644,7 @@
                                     <items>
                                         <menuItem title="jamf-migrator Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                             <connections>
-                                                <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>
+                                                <action selector="showHelpWindow:" target="Ady-hI-5gd" id="Hak-6Y-enL"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -676,6 +678,61 @@
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="67" y="208"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="dpm-Vs-BK7">
+            <objects>
+                <windowController storyboardIdentifier="Help View Controller" id="md9-xU-Yaj" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="" animationBehavior="default" id="Lg4-MW-haW">
+                        <windowStyleMask key="styleMask" titled="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="245" y="301" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                    </window>
+                    <connections>
+                        <segue destination="M0I-3w-TrH" kind="relationship" relationship="window.shadowedContentViewController" id="gjG-ad-txH"/>
+                    </connections>
+                </windowController>
+                <customObject id="JVp-if-13Y" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="664" y="257"/>
+        </scene>
+        <!--Help View Controller-->
+        <scene sceneID="nc1-VJ-iYF">
+            <objects>
+                <viewController id="M0I-3w-TrH" customClass="HelpViewController" customModule="jamf_migrator" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="YIo-Lu-hoF">
+                        <rect key="frame" x="0.0" y="0.0" width="1025" height="461"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <wkWebView wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="elp-sI-55S">
+                                <rect key="frame" x="-1" y="31" width="1027" height="431"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6c8-6L-1RG">
+                                <rect key="frame" x="950" y="-3" width="75" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Close" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wAH-wV-kT1">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="dismissHelpWindow:" target="M0I-3w-TrH" id="ENW-3d-7KC"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="help_WebView" destination="elp-sI-55S" id="L0M-v7-fDC"/>
+                    </connections>
+                </viewController>
+                <customObject id="gNt-pe-cP1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1535.5" y="343.5"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
@@ -949,12 +1006,12 @@
                                 <font key="font" metaFont="system"/>
                                 <tabViewItems>
                                     <tabViewItem label="Bulk" identifier="1" id="HJu-4l-pJU">
-                                        <view key="view" id="gsZ-k6-bEX">
-                                            <rect key="frame" x="10" y="33" width="123" height="0.0"/>
+                                        <view key="view" ambiguous="YES" id="gsZ-k6-bEX">
+                                            <rect key="frame" x="10" y="33" width="719" height="181"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SfD-sc-tna">
-                                                    <rect key="frame" x="-2" y="-164" width="702" height="172"/>
+                                                    <rect key="frame" x="-2" y="17" width="702" height="172"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <subviews>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9du-lO-vJw">
@@ -1332,7 +1389,7 @@
                                         </view>
                                     </tabViewItem>
                                     <tabViewItem label="Selective" identifier="2" id="kFF-9Q-AuV">
-                                        <view key="view" ambiguous="YES" id="SmC-W4-3P5">
+                                        <view key="view" id="SmC-W4-3P5">
                                             <rect key="frame" x="10" y="33" width="719" height="181"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -1398,7 +1455,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <clipView key="contentView" ambiguous="YES" id="HhC-ha-qc4">
                                                         <rect key="frame" x="1" y="1" width="223" height="163"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" id="QqB-5F-bOc" userLabel="Source Table View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="223" height="163"/>
@@ -1451,7 +1508,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <clipView key="contentView" ambiguous="YES" id="eQe-Ov-7cF">
                                                         <rect key="frame" x="1" y="1" width="223" height="161"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" id="ZQf-gh-Hfq" userLabel="Dest Table View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="223" height="161"/>
@@ -1617,7 +1674,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="289" y="736.5"/>
+            <point key="canvasLocation" x="66" y="722"/>
         </scene>
     </scenes>
     <resources>

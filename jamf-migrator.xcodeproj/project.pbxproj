@@ -14,6 +14,7 @@
 		9BC01C6F1DFBC564007E634E /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9BC01C6E1DFBC564007E634E /* settings.plist */; };
 		B55A277D1EAF8CA700AF8398 /* quit.png in Resources */ = {isa = PBXBuildFile; fileRef = B55A277B1EAF8CA700AF8398 /* quit.png */; };
 		B55A277E1EAF8CA700AF8398 /* go.png in Resources */ = {isa = PBXBuildFile; fileRef = B55A277C1EAF8CA700AF8398 /* go.png */; };
+		B5B651901F203C48007D7CE6 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B6518F1F203C48007D7CE6 /* HelpViewController.swift */; };
 		B5C042481EB11CF400C6E872 /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = B5C0423C1EB11CF400C6E872 /* 0.png */; };
 		B5C042491EB11CF400C6E872 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B5C0423D1EB11CF400C6E872 /* 1.png */; };
 		B5C0424A1EB11CF400C6E872 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = B5C0423E1EB11CF400C6E872 /* 2.png */; };
@@ -26,6 +27,8 @@
 		B5C042511EB11CF400C6E872 /* 9.png in Resources */ = {isa = PBXBuildFile; fileRef = B5C042451EB11CF400C6E872 /* 9.png */; };
 		B5C042521EB11CF400C6E872 /* 10.png in Resources */ = {isa = PBXBuildFile; fileRef = B5C042461EB11CF400C6E872 /* 10.png */; };
 		B5C042531EB11CF400C6E872 /* 11.png in Resources */ = {isa = PBXBuildFile; fileRef = B5C042471EB11CF400C6E872 /* 11.png */; };
+		B5E179F21F1FDAFA00A20AAA /* images in Resources */ = {isa = PBXBuildFile; fileRef = B5E179F01F1FDAFA00A20AAA /* images */; };
+		B5E179F31F1FDAFA00A20AAA /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = B5E179F11F1FDAFA00A20AAA /* index.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,7 @@
 		9BC01C6E1DFBC564007E634E /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
 		B55A277B1EAF8CA700AF8398 /* quit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quit.png; sourceTree = "<group>"; };
 		B55A277C1EAF8CA700AF8398 /* go.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = go.png; sourceTree = "<group>"; };
+		B5B6518F1F203C48007D7CE6 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		B5C0423C1EB11CF400C6E872 /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
 		B5C0423D1EB11CF400C6E872 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		B5C0423E1EB11CF400C6E872 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
@@ -50,6 +54,8 @@
 		B5C042451EB11CF400C6E872 /* 9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 9.png; sourceTree = "<group>"; };
 		B5C042461EB11CF400C6E872 /* 10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 10.png; sourceTree = "<group>"; };
 		B5C042471EB11CF400C6E872 /* 11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 11.png; sourceTree = "<group>"; };
+		B5E179F01F1FDAFA00A20AAA /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
+		B5E179F11F1FDAFA00A20AAA /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +101,10 @@
 				9BC01C631DFB0C07007E634E /* Assets.xcassets */,
 				B55A277F1EAF8CAE00AF8398 /* Images */,
 				9BC01C651DFB0C07007E634E /* Main.storyboard */,
+				B5B6518F1F203C48007D7CE6 /* HelpViewController.swift */,
 				9BC01C681DFB0C07007E634E /* Info.plist */,
 				9BC01C6E1DFBC564007E634E /* settings.plist */,
+				B5E179EF1F1FDACF00A20AAA /* help */,
 			);
 			path = "jamf-migrator";
 			sourceTree = "<group>";
@@ -120,6 +128,15 @@
 				B55A277C1EAF8CA700AF8398 /* go.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		B5E179EF1F1FDACF00A20AAA /* help */ = {
+			isa = PBXGroup;
+			children = (
+				B5E179F01F1FDAFA00A20AAA /* images */,
+				B5E179F11F1FDAFA00A20AAA /* index.html */,
+			);
+			name = help;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,6 +199,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5E179F21F1FDAFA00A20AAA /* images in Resources */,
 				B5C0424D1EB11CF400C6E872 /* 5.png in Resources */,
 				B5C0424F1EB11CF400C6E872 /* 7.png in Resources */,
 				B5C042481EB11CF400C6E872 /* 0.png in Resources */,
@@ -198,6 +216,7 @@
 				B55A277D1EAF8CA700AF8398 /* quit.png in Resources */,
 				9BC01C671DFB0C07007E634E /* Main.storyboard in Resources */,
 				B5C0424C1EB11CF400C6E872 /* 4.png in Resources */,
+				B5E179F31F1FDAFA00A20AAA /* index.html in Resources */,
 				B5C042491EB11CF400C6E872 /* 1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,6 +229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BC01C621DFB0C07007E634E /* ViewController.swift in Sources */,
+				B5B651901F203C48007D7CE6 /* HelpViewController.swift in Sources */,
 				9BC01C601DFB0C07007E634E /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -329,7 +349,7 @@
 				DEVELOPMENT_TEAM = PS2F6S478M;
 				INFOPLIST_FILE = "jamf-migrator/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jamf.jamf-migrator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -345,7 +365,7 @@
 				DEVELOPMENT_TEAM = PS2F6S478M;
 				INFOPLIST_FILE = "jamf-migrator/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jamf.jamf-migrator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;

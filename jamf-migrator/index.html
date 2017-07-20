@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Page</title>
+<meta name="generator" content="Quick 'n Easy Web Builder - http://www.quickandeasywebbuilder.com">
+<style>
+body
+{
+   background-color: #FFFFFF;
+   color: #000000;
+   font-family: Arial;
+   font-weight: normal;
+   font-size: 13px;
+   line-height: 1.1875;
+   margin: 0;
+   padding: 0;
+}
+a
+{
+   color: #0000FF;
+   text-decoration: underline;
+}
+a:visited
+{
+   color: #800080;
+}
+a:active
+{
+   color: #FF0000;
+}
+a:hover
+{
+   color: #0000FF;
+   text-decoration: underline;
+}
+#wb_Heading1
+{
+   background-color: #FFFFFF;
+   background-image: none;
+   border: 0px #000000 solid;
+   padding: 0px 0px 0px 0px;
+}
+#Heading1
+{
+   color: #000000;
+   font-family: Arial;
+   font-weight: normal;
+   font-size: 32px;
+   margin: 0;
+   text-align: left;
+}
+#wb_Text1
+{
+   background-color: transparent;
+   background-image: none;
+   border: 0px #C0C0C0 solid;
+   padding: 0;
+   margin: 0;
+   text-align: left;
+}
+#wb_Text1 div
+{
+   text-align: left;
+}
+#wb_Text2
+{
+   background-color: transparent;
+   background-image: none;
+   border: 0px #C0C0C0 solid;
+   padding: 0;
+   margin: 0;
+   text-align: left;
+}
+#wb_Text2 div
+{
+   text-align: left;
+}
+#Image1
+{
+   border: 0px #000000 solid;
+   padding: 0px 0px 0px 0px;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="wb_Heading1" style="position:absolute;left:426px;top:30px;width:271px;height:55px;z-index:0;">
+<h1 id="Heading1">Jamf Migrator</h1></div>
+<div id="wb_Text1" style="position:absolute;left:58px;top:518px;width:625px;height:173px;z-index:1;">
+<div style="font-family:Arial;font-size:13px;line-height:15px;color:#000000;">
+<div>Migrate items from one Jamf server to another.</div>
+<div><br></div>
+<div>Feedback in the GUI gives a simplistic overview of the success of a transfer:</div>
+<ul style="margin-left:17px;">
+   <li>Green - everything transferred.</li>
+   <li>Yellow - some items transferred.</li>
+   <li>Red - nothing transferred.</li>
+   <li>white - nothing to transfer.</li>
+</ul>
+</div>
+</div>
+<div id="wb_Text2" style="position:absolute;left:55px;top:675px;width:965px;height:377px;z-index:2;">
+<div style="font-family:Arial;font-size:13px;line-height:15px;color:#000000;">
+<div>Limitations/requirements to be aware of:</div>
+<ul style="margin-left:17px;">
+   <li>Passwords can not be extracted through the API which impacts migrating distribution points, computer management account, account used for LDAP - credentials must be reset on the destination server.</li>
+   <li>Only AFP and SMB shares can be migrated.</li>
+   <li>Patch management is not available through the API impacting smart groups dependent on patch management extension attributes.</li>
+   <li>There are many dependancies between items, if they are not met transfers fail.&nbsp; For example, if a policy is site specific the site must be migrated before the policy; if a distribution point has a building and/or department defined those need to migrate first....&nbsp; If everything is migrated the order of sections is already taken care of, if you choose not to move some items that's where you can have issues.</li>
+   <li>Buildings - the API only allow the name to be migrated.</li>
+</ul>
+</div>
+</div>
+<div id="wb_Image1" style="position:absolute;left:122px;top:83px;width:818px;height:410px;z-index:3;">
+<img src="images/migrator1.png" id="Image1" alt=""></div>
+</body>
+</html>
