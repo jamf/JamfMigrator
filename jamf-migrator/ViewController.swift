@@ -293,7 +293,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         self.source_jp_server = source_jp_server_field.stringValue
         self.source_user = source_user_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
         self.source_pass = source_pwd_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
-        
+       
+        self.dest_jp_server = dest_jp_server_field.stringValue
         self.dest_user = dest_user_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
         self.dest_pass = dest_pwd_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
         
@@ -468,9 +469,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             NSLog("Removing data from destination server - \(dest_jp_server_field.stringValue)")
             wipe_data = true
             
-            self.dest_jp_server = dest_jp_server_field.stringValue
-            self.dest_user = dest_user_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
-            self.dest_pass = dest_pwd_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
             migrateOrWipe = "----------- Starting To Wipe Data -----------\n"
         } else {
             NSLog("Migrating data from \(source_jp_server_field.stringValue) to \(dest_jp_server_field.stringValue).")
