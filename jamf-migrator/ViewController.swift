@@ -293,7 +293,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         self.source_jp_server = source_jp_server_field.stringValue
         self.source_user = source_user_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
         self.source_pass = source_pwd_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
-        
+       
+        self.dest_jp_server = dest_jp_server_field.stringValue
         self.dest_user = dest_user_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
         self.dest_pass = dest_pwd_field.stringValue.addingPercentEncoding(withAllowedCharacters: safeCharSet)!
         
