@@ -228,6 +228,29 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         }
     }
 
+    @IBAction func toggleAllNone(_ sender: NSButton) {
+        self.allNone_button.state = (
+            self.building_button.state == 1
+            && self.advcompsearch_button.state == 1
+            && self.categories_button.state == 1
+            && self.computers_button.state == 1
+            && self.dept_button.state == 1
+            && self.fileshares_button.state == 1
+            && self.sus_button.state == 1
+            && self.ldapservers_button.state == 1
+            && self.netboot_button.state == 1
+            && self.osxconfigurationprofiles_button.state == 1
+            && self.smart_comp_grps_button.state == 1
+            && self.static_comp_grps_button.state == 1
+            && self.ext_attribs_button.state == 1
+            && self.sites_button.state == 1
+            && self.scripts_button.state == 1
+            && self.networks_button.state == 1
+            && self.packages_button.state == 1
+            && self.printers_button.state == 1
+            && self.policies_button.state == 1
+            && self.users_button.state == 1) ? 1 : 0;
+    }
     
     @IBAction func allNone(_ sender: Any) {
         self.advcompsearch_button.state = self.allNone_button.state
@@ -240,7 +263,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         self.ldapservers_button.state = self.allNone_button.state
         self.netboot_button.state = self.allNone_button.state
         self.osxconfigurationprofiles_button.state = self.allNone_button.state
-//        self.all_groups_button.state = self.allNone_button.state
         self.smart_comp_grps_button.state = self.allNone_button.state
         self.static_comp_grps_button.state = self.allNone_button.state
         self.ext_attribs_button.state = self.allNone_button.state
