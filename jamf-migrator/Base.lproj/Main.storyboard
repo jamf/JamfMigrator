@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
@@ -986,12 +986,12 @@
                                 <font key="font" metaFont="system"/>
                                 <tabViewItems>
                                     <tabViewItem label="Bulk" identifier="1" id="HJu-4l-pJU">
-                                        <view key="view" id="gsZ-k6-bEX">
-                                            <rect key="frame" x="10" y="33" width="719" height="181"/>
+                                        <view key="view" ambiguous="YES" id="gsZ-k6-bEX">
+                                            <rect key="frame" x="10" y="33" width="123" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SfD-sc-tna">
-                                                    <rect key="frame" x="-2" y="17" width="702" height="172"/>
+                                                    <rect key="frame" x="-2" y="-164" width="702" height="172"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <subviews>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9du-lO-vJw">
@@ -1021,6 +1021,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="iih-dN-0Bf"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N8m-5e-2q7">
                                                             <rect key="frame" x="183" y="104" width="60" height="17"/>
@@ -1047,6 +1050,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="Da4-e7-hye"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VTB-4B-taj">
                                                             <rect key="frame" x="360" y="39" width="98" height="17"/>
@@ -1064,6 +1070,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="7cR-ph-3Ad"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O25-Wj-mUa" userLabel="Static Group fld">
                                                             <rect key="frame" x="360" y="18" width="98" height="17"/>
@@ -1081,6 +1090,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="46Q-AK-mO8"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kMV-ND-9Kx" userLabel="Scripts">
                                                             <rect key="frame" x="360" y="61" width="60" height="17"/>
@@ -1098,6 +1110,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="CRp-pZ-0hc"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c4g-bk-XZJ">
                                                             <rect key="frame" x="360" y="83" width="134" height="17"/>
@@ -1115,6 +1130,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="3ZG-xa-5tk"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1sM-yz-JS8" userLabel="Categories">
                                                             <rect key="frame" x="46" y="18" width="74" height="17"/>
@@ -1132,6 +1150,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="zK6-Y7-slu"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b5v-KK-ZKw" userLabel="File Shares (AFP/SMB)">
                                                             <rect key="frame" x="183" y="18" width="140" height="17"/>
@@ -1149,6 +1170,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="Uys-mO-IZL"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TGh-dy-khY" userLabel="SUS">
                                                             <rect key="frame" x="183" y="40" width="37" height="17"/>
@@ -1166,6 +1190,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="gBZ-aK-Ls9"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hKq-nN-1IN" userLabel="Netboot Servers">
                                                             <rect key="frame" x="360" y="104" width="103" height="17"/>
@@ -1183,6 +1210,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="BYC-1Q-bdZ"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VdM-cx-5fK">
                                                             <rect key="frame" x="183" y="61" width="42" height="17"/>
@@ -1200,6 +1230,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="19w-jF-4VN"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XnO-rK-cp3">
                                                             <rect key="frame" x="533" y="104" width="128" height="17"/>
@@ -1217,6 +1250,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="7xg-WK-kCB"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tvH-Q3-0zQ" userLabel="Packages field">
                                                             <rect key="frame" x="533" y="83" width="69" height="17"/>
@@ -1234,6 +1270,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="IpP-4y-Yco"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VB2-eO-067" userLabel="Printers field">
                                                             <rect key="frame" x="533" y="62" width="57" height="17"/>
@@ -1251,6 +1290,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="7pj-OG-TqB"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V21-1X-tzz">
                                                             <rect key="frame" x="533" y="39" width="74" height="17"/>
@@ -1268,6 +1310,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="1oL-A0-KdZ"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JUS-FF-1hL">
                                                             <rect key="frame" x="46" y="60" width="42" height="17"/>
@@ -1285,6 +1330,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="u2K-jA-0Wk"/>
+                                                            </connections>
                                                         </button>
                                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="llc-Ji-GYb">
                                                             <rect key="frame" x="26" y="101" width="98" height="20"/>
@@ -1293,6 +1341,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="8hJ-C8-uND"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WHx-8J-iwK">
                                                             <rect key="frame" x="46" y="104" width="77" height="17"/>
@@ -1310,6 +1361,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="RDy-sC-qBs"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uAi-xC-0ej" userLabel="Config Profile field">
                                                             <rect key="frame" x="46" y="82" width="102" height="17"/>
@@ -1336,6 +1390,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="LhX-AH-F7d"/>
+                                                            </connections>
                                                         </button>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="frP-qX-R8Z">
                                                             <rect key="frame" x="46" y="40" width="94" height="17"/>
@@ -1362,6 +1419,9 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" size="14" name="Helvetica"/>
                                                             </buttonCell>
+                                                            <connections>
+                                                                <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="R4b-Z1-1U7"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                 </customView>
@@ -1369,7 +1429,7 @@
                                         </view>
                                     </tabViewItem>
                                     <tabViewItem label="Selective" identifier="2" id="kFF-9Q-AuV">
-                                        <view key="view" ambiguous="YES" id="SmC-W4-3P5">
+                                        <view key="view" id="SmC-W4-3P5">
                                             <rect key="frame" x="10" y="33" width="719" height="181"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -1435,7 +1495,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <clipView key="contentView" ambiguous="YES" id="HhC-ha-qc4">
                                                         <rect key="frame" x="1" y="1" width="223" height="163"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" id="QqB-5F-bOc" userLabel="Source Table View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="223" height="163"/>
@@ -1488,7 +1548,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <clipView key="contentView" ambiguous="YES" id="eQe-Ov-7cF">
                                                         <rect key="frame" x="1" y="1" width="223" height="161"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" id="ZQf-gh-Hfq" userLabel="Dest Table View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="223" height="161"/>
