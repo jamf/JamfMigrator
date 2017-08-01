@@ -689,17 +689,16 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                         for j in (0..<self.targetDataArray.count) {
                             objToMigrateID = self.availableIDsToMigDict[self.targetDataArray[j]]!
                             if !self.wipe_data  {
-                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] check for existing object: \(self.availableObjsToMigDict[objToMigrateID]!)\n") }
-                                if self.currentEPs[self.availableObjsToMigDict[objToMigrateID]!] != nil {
-                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(self.availableObjsToMigDict[objToMigrateID]!) already exists\n") }
-                                    //self.currentEndpointID = self.currentEPs[xmlName]!
-                                    self.endPointByID(endpoint: self.objectsToMigrate[0], endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: self.targetDataArray.count, action: "update", destEpId: self.currentEPs[self.availableObjsToMigDict[objToMigrateID]!]!)
-                                } else {
-                                    self.endPointByID(endpoint: self.objectsToMigrate[0], endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: self.targetDataArray.count, action: "create", destEpId: 0)
+                                if let selectedObject = self.availableObjsToMigDict[objToMigrateID] {
+                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] check for existing object: \(selectedObject)\n") }
+                                    if nil != self.currentEPs[self.availableObjsToMigDict[objToMigrateID]!] {
+                                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(selectedObject) already exists\n") }
+                                        //self.currentEndpointID = self.currentEPs[xmlName]!
+                                        self.endPointByID(endpoint: self.objectsToMigrate[0], endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: self.targetDataArray.count, action: "update", destEpId: self.currentEPs[self.availableObjsToMigDict[objToMigrateID]!]!)
+                                    } else {
+                                        self.endPointByID(endpoint: self.objectsToMigrate[0], endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: self.targetDataArray.count, action: "create", destEpId: 0)
+                                    }
                                 }
-                                
-                                //self.endPointByID(endpoint: objectsToMigrate[0], endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: targetDataArray.count, action: "create", destEpId: 0)
-                                //self.endPointByID(endpoint: endpoint, endpointID: xmlID, endpointCurrent: (i+1), endpointCount: endpointCount)
                             } else {
                                 if self.debug { self.writeToHistory(stringOfText: "[- debug -] selective removal not implemented - would need object ID from destination server rather than source server.\n") }
                             }   // if !self.wipe_data else - end
@@ -743,6 +742,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         } else {
             progressCountArray["smartcomputergroups"] = 0
             progressCountArray["staticcomputergroups"] = 0
+            progressCountArray["computergroups"] = 0 // this is the recognized end point?
         }
         
         
@@ -921,6 +921,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                             var counter = 1
                                             for (l_xmlID, l_xmlName) in currentGroupDict {
                                                 if l_xmlName != "All Managed Clients" && l_xmlName != "All Managed Servers" {
+                                                    self.availableObjsToMigDict[l_xmlID] = l_xmlName
                                                     if self.goSender == "goButton" {
                                                         if !self.wipe_data  {
                                                             self.endPointByID(endpoint: localEndpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: groupCount, action: "create", destEpId: 0)
@@ -971,7 +972,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                     }
                                                 }
                                             }
-                                            
+                                            self.availableObjsToMigDict = computerPoliciesDict
                                             let nonRemotePolicies = computerPoliciesDict.count
                                             var counter = 1
                                             for (l_xmlID, l_xmlName) in computerPoliciesDict {
