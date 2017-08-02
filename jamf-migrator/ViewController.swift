@@ -289,6 +289,31 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     }
     
     @IBAction func Go(sender: AnyObject) {
+        if self.debug { self.writeToHistory(stringOfText: "[- debug -] Start Migrating/Removal\n") }
+        // check for file that allow deleting data from destination server - start
+        //       var isDir: ObjCBool = false
+        if (fm.fileExists(atPath: NSHomeDirectory() + "/Library/Application Support/jamf-migrator/DELETE", isDirectory: &isDir)) {
+            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Removing data from destination server - \(dest_jp_server_field.stringValue)\n") }
+            wipe_data = true
+            
+            migrateOrWipe = "----------- Starting To Wipe Data -----------\n"
+        } else {
+            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Migrating data from \(source_jp_server_field.stringValue) to \(dest_jp_server_field.stringValue).\n") }
+            // verify source and destination are not the same - start
+            if source_jp_server_field.stringValue == dest_jp_server_field.stringValue {
+                alert_dialog(header: "Alert", message: "Source and destination servers cannot be the same.")
+                //self.go_button.isEnabled = true
+                self.goButtonEnabled(button_status: true)
+                return
+            }
+            // verify source and destination are not the same - end
+            wipe_data = false
+            
+            migrateOrWipe = "----------- Starting Migration -----------\n"
+        }
+        // check for file that allow deleting data from destination server - end
+        
+        
         if debug { writeToHistory(stringOfText: "[- debug -] go sender tag: \(sender.tag)\n") }
         // determine if we got here from the Go button or selectToMigrate button
         if sender.tag != nil {
@@ -312,7 +337,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         currentEPs.removeAll()
 
         // credentials were entered check - start
-        if source_user_field.stringValue == "" || source_pwd_field.stringValue == "" {
+        if (source_user_field.stringValue == "" || source_pwd_field.stringValue == "") && !wipe_data {
             alert_dialog(header: "Alert", message: "Must provide both a username and password for the source server.")
             //self.go_button.isEnabled = true
             goButtonEnabled(button_status: true)
@@ -337,12 +362,15 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         // set credentials / servers - end
         
         // server is reachable - start
-        if !(checkURL(theUrl: self.source_jp_server) == 0) {
-            self.alert_dialog(header: "Attention", message: "The source server, \(self.source_jp_server), URL could not be contacted.")
-            //self.go_button.isEnabled = true
-            goButtonEnabled(button_status: true)
-            return
+        if !wipe_data {
+            if !(checkURL(theUrl: self.source_jp_server) == 0) {
+                self.alert_dialog(header: "Attention", message: "The source server, \(self.source_jp_server), URL could not be contacted.")
+                //self.go_button.isEnabled = true
+                goButtonEnabled(button_status: true)
+                return
+            }
         }
+
         if !(checkURL(theUrl: self.dest_jp_server) == 0) {
             self.alert_dialog(header: "Attention", message: "The destination, \(self.dest_jp_server), server URL could not be contacted.")
             //self.go_button.isEnabled = true
@@ -363,7 +391,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         // check authentication - start
         self.authCheck(f_sourceURL: self.source_jp_server, f_credentials: self.sourceBase64Creds)  {
             (result: Bool) in
-            if !result {
+            if !result && !self.wipe_data {
                 NSLog("Source server authentication failure.")
                 return
             } else {
@@ -444,95 +472,100 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     func authCheck(f_sourceURL: String, f_credentials: String, completion: @escaping (Bool) -> Void) {
         var validCredentials:Bool = false
         if self.debug { self.writeToHistory(stringOfText: "[- debug -] --- checking authentication to: \(f_sourceURL)\n") }
-        //theOpQ.maxConcurrentOperationCount = 1
-        //let semaphore = DispatchSemaphore(value: 0)
-        //print("operations in Auth que: \(theOpQ.operationCount)")
-        //print("operations Auth que: \(theOpQ.operations)")
         
-        authQ.sync {
-            var myURL = "\(f_sourceURL)/JSSResource/buildings"
-            myURL = myURL.replacingOccurrences(of: "//JSSResource", with: "/JSSResource")
-            if self.debug { self.writeToHistory(stringOfText: "[- debug -] checking: \(myURL)\n") }
+        if !(f_sourceURL == self.source_jp_server && wipe_data) {
+            authQ.sync {
+                var myURL = "\(f_sourceURL)/JSSResource/buildings"
+                myURL = myURL.replacingOccurrences(of: "//JSSResource", with: "/JSSResource")
+                if self.debug { self.writeToHistory(stringOfText: "[- debug -] checking: \(myURL)\n") }
+                
+                let encodedURL = NSURL(string: myURL)
+                let request = NSMutableURLRequest(url: encodedURL! as URL)
+                //let request = NSMutableURLRequest(url: encodedURL as! URL, cachePolicy: NSURLRequest.CachePolicy(rawValue: 1)!, timeoutInterval: 10)
+                request.httpMethod = "GET"
+                let configuration = URLSessionConfiguration.default
+                configuration.httpAdditionalHeaders = ["Authorization" : "Basic \(f_credentials)", "Content-Type" : "application/json", "Accept" : "application/json"]
+                let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+                let task = session.dataTask(with: request as URLRequest, completionHandler: {
+                    (data, response, error) -> Void in
+                    if let httpResponse = response as? HTTPURLResponse {
+                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(myURL) auth check httpResponse: \(httpResponse.statusCode)\n") }
+                        
+                        if httpResponse.statusCode >= 199 && httpResponse.statusCode <= 299 {
+                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(myURL) auth httpResponse, between 199 and 299: \(httpResponse.statusCode)\n") }
+                            validCredentials = true
+                            completion(validCredentials)
+                        } else {
+                            if self.debug { self.writeToHistory(stringOfText: "\n\n[- debug -] ---------- status code ----------\n") }
+                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(httpResponse.statusCode)\n") }
+                            self.httpStatusCode = httpResponse.statusCode
+                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] ---------- status code ----------\n") }
+                            if self.debug { self.writeToHistory(stringOfText: "\n\n[- debug -] ---------- response ----------\n") }
+                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(httpResponse)\n") }
+                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] ---------- response ----------\n\n") }
+                            self.theOpQ.cancelAllOperations()
+                            switch self.httpStatusCode {
+                            case 401:
+                                self.alert_dialog(header: "Authentication Failure", message: "Please verify username and password for:\n\(f_sourceURL)")
+                            default:
+                                self.alert_dialog(header: "Error", message: "An unknown error occured trying to query the server:\n\(f_sourceURL)")
+                            }
+                            //                        401 - wrong username and/or password
+                            //                        409 - unable to create object; already exists or data missing or xml error
+                            //self.go_button.isEnabled = true
+                            self.goButtonEnabled(button_status: true)
+                            completion(validCredentials)
+                        }   // if httpResponse/else - end
+                    }   // if let httpResponse - end
+                    if error != nil {
+                    }
+                })  // let task = session - end
+                task.resume()
+            }   // authQ - end
+        } else {
+            completion(true)
+        }
 
-            let encodedURL = NSURL(string: myURL)
-            let request = NSMutableURLRequest(url: encodedURL! as URL)
-            //let request = NSMutableURLRequest(url: encodedURL as! URL, cachePolicy: NSURLRequest.CachePolicy(rawValue: 1)!, timeoutInterval: 10)
-            request.httpMethod = "GET"
-            let configuration = URLSessionConfiguration.default
-            configuration.httpAdditionalHeaders = ["Authorization" : "Basic \(f_credentials)", "Content-Type" : "application/json", "Accept" : "application/json"]
-            let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-            let task = session.dataTask(with: request as URLRequest, completionHandler: {
-                (data, response, error) -> Void in
-                if let httpResponse = response as? HTTPURLResponse {
-                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(myURL) auth check httpResponse: \(httpResponse.statusCode)\n") }
-                    
-                    if httpResponse.statusCode >= 199 && httpResponse.statusCode <= 299 {
-                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(myURL) auth httpResponse, between 199 and 299: \(httpResponse.statusCode)\n") }
-                        validCredentials = true
-                        completion(validCredentials)
-                    } else {
-                        if self.debug { self.writeToHistory(stringOfText: "\n\n[- debug -] ---------- status code ----------\n") }
-                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(httpResponse.statusCode)\n") }
-                        self.httpStatusCode = httpResponse.statusCode
-                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] ---------- status code ----------\n") }
-                        if self.debug { self.writeToHistory(stringOfText: "\n\n[- debug -] ---------- response ----------\n") }
-                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(httpResponse)\n") }
-                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] ---------- response ----------\n\n") }
-                        self.theOpQ.cancelAllOperations()
-                        switch self.httpStatusCode {
-                        case 401:
-                            self.alert_dialog(header: "Authentication Failure", message: "Please verify username and password for:\n\(f_sourceURL)")
-                        default:
-                            self.alert_dialog(header: "Error", message: "An unknown error occured trying to query the source server.")
-                        }
-                        //                        401 - wrong username and/or password
-                        //                        409 - unable to create object; already exists or data missing or xml error
-                        //self.go_button.isEnabled = true
-                        self.goButtonEnabled(button_status: true)
-                        completion(validCredentials)
-                    }   // if httpResponse/else - end
-                }   // if let httpResponse - end
-                if error != nil {
-                }
-            })  // let task = session - end
-            task.resume()
-        }   // authQ - end
     }   // func authCheck - end
     
     func startMigrating() {
         if self.debug { self.writeToHistory(stringOfText: "[- debug -] Start Migrating/Removal\n") }
         // check for file that allow deleting data from destination server - start
  //       var isDir: ObjCBool = false
-        if (fm.fileExists(atPath: NSHomeDirectory() + "/Library/Application Support/jamf-migrator/DELETE", isDirectory: &isDir)) {
-            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Removing data from destination server - \(dest_jp_server_field.stringValue)\n") }
-            wipe_data = true
-            
-            migrateOrWipe = "----------- Starting To Wipe Data -----------\n"
-        } else {
-            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Migrating data from \(source_jp_server_field.stringValue) to \(dest_jp_server_field.stringValue).\n") }
-            // verify source and destination are not the same - start
-            if source_jp_server_field.stringValue == dest_jp_server_field.stringValue {
-                alert_dialog(header: "Alert", message: "Source and destination servers cannot be the same.")
-                //self.go_button.isEnabled = true
-                self.goButtonEnabled(button_status: true)
-                return
-            }
-            // verify source and destination are not the same - end
-            wipe_data = false
-            
-            migrateOrWipe = "----------- Starting Migration -----------\n"
-        }
-        // check for file that allow deleting data from destination server - end
+//        if (fm.fileExists(atPath: NSHomeDirectory() + "/Library/Application Support/jamf-migrator/DELETE", isDirectory: &isDir)) {
+//            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Removing data from destination server - \(dest_jp_server_field.stringValue)\n") }
+//            wipe_data = true
+//            
+//            migrateOrWipe = "----------- Starting To Wipe Data -----------\n"
+//        } else {
+//            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Migrating data from \(source_jp_server_field.stringValue) to \(dest_jp_server_field.stringValue).\n") }
+//            // verify source and destination are not the same - start
+//            if source_jp_server_field.stringValue == dest_jp_server_field.stringValue {
+//                alert_dialog(header: "Alert", message: "Source and destination servers cannot be the same.")
+//                //self.go_button.isEnabled = true
+//                self.goButtonEnabled(button_status: true)
+//                return
+//            }
+//            // verify source and destination are not the same - end
+//            wipe_data = false
+//            
+//            migrateOrWipe = "----------- Starting Migration -----------\n"
+//        }
+//        // check for file that allow deleting data from destination server - end
         
-        // set credentials - start
-        sourceCreds = "\(source_user):\(source_pass)"
-        let sourceUtf8Creds = sourceCreds.data(using: String.Encoding.utf8)
-        sourceBase64Creds = (sourceUtf8Creds?.base64EncodedString())!
         
-        destCreds = "\(dest_user):\(dest_pass)"
-        let destUtf8Creds = destCreds.data(using: String.Encoding.utf8)
-        destBase64Creds = (destUtf8Creds?.base64EncodedString())!
-        // set credentials - end
+        
+//        // set credentials - start
+//        sourceCreds = "\(source_user):\(source_pass)"
+//        let sourceUtf8Creds = sourceCreds.data(using: String.Encoding.utf8)
+//        sourceBase64Creds = (sourceUtf8Creds?.base64EncodedString())!
+//        
+//        destCreds = "\(dest_user):\(dest_pass)"
+//        let destUtf8Creds = destCreds.data(using: String.Encoding.utf8)
+//        destBase64Creds = (destUtf8Creds?.base64EncodedString())!
+//        // set credentials - end
+        
+        
         
         // list the items in the order they need to be migrated
         if migrationMode == "bulk" {

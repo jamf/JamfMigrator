@@ -69,17 +69,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9B8F84071E0C2D10001B0F40 /* images */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = images;
-			sourceTree = "<group>";
-		};
 		9BC01C531DFB0C07007E634E = {
 			isa = PBXGroup;
 			children = (
-				9B8F84071E0C2D10001B0F40 /* images */,
 				9BC01C5E1DFB0C07007E634E /* jamf-migrator */,
 				9BC01C5D1DFB0C07007E634E /* Products */,
 			);
