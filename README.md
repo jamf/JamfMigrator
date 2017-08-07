@@ -37,7 +37,7 @@ A more detailed review of migration successes/failures can be found in the log, 
 * Selective migration now lists endpoints alpha-numeric.
 * Added debug logging. To enable, launch the app from terminal:
 
-```…/jamf-migrator.app//Contents/MacOS/jamf-migrator –debug```
+```…/jamf-migrator.app/Contents/MacOS/jamf-migrator –debug```
 
 * Debug info is added to the history file
 * Easily open the history folder from View on the menu bar, or command+L
