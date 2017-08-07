@@ -530,42 +530,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     
     func startMigrating() {
         if self.debug { self.writeToHistory(stringOfText: "[- debug -] Start Migrating/Removal\n") }
-        // check for file that allow deleting data from destination server - start
- //       var isDir: ObjCBool = false
-//        if (fm.fileExists(atPath: NSHomeDirectory() + "/Library/Application Support/jamf-migrator/DELETE", isDirectory: &isDir)) {
-//            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Removing data from destination server - \(dest_jp_server_field.stringValue)\n") }
-//            wipe_data = true
-//            
-//            migrateOrWipe = "----------- Starting To Wipe Data -----------\n"
-//        } else {
-//            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Migrating data from \(source_jp_server_field.stringValue) to \(dest_jp_server_field.stringValue).\n") }
-//            // verify source and destination are not the same - start
-//            if source_jp_server_field.stringValue == dest_jp_server_field.stringValue {
-//                alert_dialog(header: "Alert", message: "Source and destination servers cannot be the same.")
-//                //self.go_button.isEnabled = true
-//                self.goButtonEnabled(button_status: true)
-//                return
-//            }
-//            // verify source and destination are not the same - end
-//            wipe_data = false
-//            
-//            migrateOrWipe = "----------- Starting Migration -----------\n"
-//        }
-//        // check for file that allow deleting data from destination server - end
-        
-        
-        
-//        // set credentials - start
-//        sourceCreds = "\(source_user):\(source_pass)"
-//        let sourceUtf8Creds = sourceCreds.data(using: String.Encoding.utf8)
-//        sourceBase64Creds = (sourceUtf8Creds?.base64EncodedString())!
-//        
-//        destCreds = "\(dest_user):\(dest_pass)"
-//        let destUtf8Creds = destCreds.data(using: String.Encoding.utf8)
-//        destBase64Creds = (destUtf8Creds?.base64EncodedString())!
-//        // set credentials - end
-        
-        
         
         // list the items in the order they need to be migrated
         if migrationMode == "bulk" {
@@ -681,14 +645,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             return
         }
         
-//        historyFile = getCurrentTime() + "_migration.txt"
-//        isDir = false
-//        if !(fm.fileExists(atPath: historyPath! + historyFile, isDirectory: &isDir)) {
-//            _ = try? fm.createDirectory(atPath: historyPath!, withIntermediateDirectories: true, attributes: nil )
-//        }
-//        fm.createFile(atPath: historyPath! + historyFile, contents: nil, attributes: nil)
-//        historyFileW = FileHandle(forUpdatingAtPath: (historyPath! + historyFile))
-        
         writeToHistory(stringOfText: migrateOrWipe)
         //go_button.isEnabled = false
         self.goButtonEnabled(button_status: false)
@@ -743,7 +699,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     }   // func startMigrating - end
 
     
-    func getEndpoints(endpoint: String, completion: (_ result: String) -> Void) {
+    func getEndpoints(endpoint: String, completion: @escaping (_ result: String) -> Void) {
         if self.debug { self.writeToHistory(stringOfText: "[- debug -] Getting \(endpoint)\n") }
         var endpointParent = ""
         switch endpoint {
@@ -779,7 +735,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         }
         
         
-        theOpQ.maxConcurrentOperationCount = 1
+        theOpQ.maxConcurrentOperationCount = 2
         let semaphore = DispatchSemaphore(value: 0)
 
 //        print("operations in que: \(theOpQ.operationCount)")
@@ -887,11 +843,14 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                     self.srcSrvTableView.reloadData()
                                                 }
                                             }   // if self.goSender else - end
-//                                                counter += 1
-//                                            }   // for (l_xmlID, l_xmlName) in computerPoliciesDict - end
-//                                            }   // for i in - end
-                                        }   // if endpointCount - end
-                                    } // self.existingEndpoints(destEndpoint: "computers")
+                                        }
+                                    } else {
+                                        if endpoint == self.objectsToMigrate.last {
+                                            self.rmDELETE()
+                                            self.goButtonEnabled(button_status: true)
+                                            completion("Got endpoint - \(endpoint)")
+                                        }
+                                    }// if endpointCount - end
                                 }   // end if let buildings, departments...
                                 
                             case "computergroups":
@@ -967,7 +926,12 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                             //print("adding \(l_xmlName) to array")
                                                             self.availableIDsToMigDict[l_xmlName] = l_xmlID
                                                             self.sourceDataArray.append(l_xmlName)
+//                                                            self.srcSrvTableView.reloadData()
+                                                            
+                                                            
+                                                            self.sourceDataArray = self.sourceDataArray.sorted{$0.localizedCompare($1) == .orderedAscending}
                                                             self.srcSrvTableView.reloadData()
+                                                            
                                                         }   // DispatchQueue.main.async - end
                                                     }   // if self.goSender else - end
                                                 } else if counter == groupCount {
@@ -977,7 +941,13 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                 counter += 1
                                             }   // for (l_xmlID, l_xmlName) - end
                                         }   //for g in (0...1) - end
-                                    }
+                                    } else {
+                                        if endpoint == self.objectsToMigrate.last {
+                                            self.rmDELETE()
+                                            self.goButtonEnabled(button_status: true)
+                                            completion("Got endpoint - \(endpoint)")
+                                        }
+                                    }   // if endpointCount - end
                                 }   // if let endpointInfo = endpointJSON["computer_groups"] - end
 
                             case "policies":
@@ -1030,13 +1000,21 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                         //print("adding \(l_xmlName) to array")
                                                         self.availableIDsToMigDict[l_xmlName] = l_xmlID
                                                         self.sourceDataArray.append(l_xmlName)
+//                                                        self.srcSrvTableView.reloadData()
+                                                        self.sourceDataArray = self.sourceDataArray.sorted{$0.localizedCompare($1) == .orderedAscending}
                                                         self.srcSrvTableView.reloadData()
                                                     }   // DispatchQueue.main.async - end
                                                 }   // if self.goSender else - end
                                                 counter += 1
                                             }   // for (l_xmlID, l_xmlName) in computerPoliciesDict - end
-                                        }   // if endpointCount > 0
-                                    } // self.existingEndpoints(destEndpoint: "advancedcomputersearches")
+                                        }
+                                    } else {
+                                        if endpoint == self.objectsToMigrate.last {
+                                            self.rmDELETE()
+                                            self.goButtonEnabled(button_status: true)
+                                            completion("Got endpoint - \(endpoint)")
+                                        }
+                                    }   // if endpointCount > 0
                                 }   //if let endpointInfo = endpointJSON - end
                                 
                             default:
@@ -2162,7 +2140,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         historyCleanup()
     }
     
-    // http://timekl.com/blog/2015/08/21/shipping-an-app-with-app-transport-security/
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
