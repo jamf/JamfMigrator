@@ -10,7 +10,7 @@ Feedback in the GUI gives a simplistic overview of the success of a transfer:
 * White - nothing to transfer.
 
 
-A more detailed review of migration successes/failures can be found in the log, located in ~/Library/Application Support/jamf-migrator/history/<date>_<time>_migration.txt.
+A more detailed review of migration successes/failures can be found in the log, located in `~/Library/Application Support/jamf-migrator/history/<date>_<time>_migration.txt.`
 
 **Note:** the app can also be used to clear out a Jamf server.  Typing the following after launching the app will remove items from the destination server.
 
