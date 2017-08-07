@@ -1,6 +1,8 @@
 # JamfMigrator
 A tool to migrate data granularly between Jamf Pro servers
 
+![alt text](https://raw.githubusercontent.com/jamfprofessionalservices/JamfMigrator/master/jamf-migrator/images/migrator1.png "JamfMigrator")
+
 Feedback in the GUI gives a simplistic overview of the success of a transfer:
 * Green - everything transferred.
 * Yellow - some items transferred.
