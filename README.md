@@ -34,7 +34,7 @@ A more detailed review of migration successes/failures can be found in the log, 
 **jamf-migrator v2.0.0**<p>
 * Change to the user interface.  Grouped similar categories together.
 * Added iOS items.
-* Selective migration now allows the selection of multiple items, using controll and/or shift key.
+* Selective migration now allows the selection of multiple items, using control and/or shift key.
 * Added selective removal of items within a category.
 
 
