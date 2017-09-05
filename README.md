@@ -29,6 +29,13 @@ A more detailed review of migration successes/failures can be found in the log, 
 
 
 ## History
+**jamf-migrator v2.0.0**<p>
+* Change to the user interface.  Grouped similar categories together.
+* Added iOS items.
+* Selective migration now allows the selection of multiple items, using controll and/or shift key.
+* Added selective removal of items within a category.
+
+
 **jamf-migrator v1.2.1**<p>
 * fixed issue where app would hang if last/only item migrated had no endpoints.
 * credentials no longer needed for source server when removing data.
