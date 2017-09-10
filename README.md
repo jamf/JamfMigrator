@@ -3,7 +3,7 @@ A tool to migrate data granularly between Jamf Pro servers
 
 ![alt text](https://github.com/jamfprofessionalservices/JamfMigrator/blob/master/jamf-migrator/images/migrator2.png "JamfMigrator")
 
-Download: [JamfMigrator](https://github.com/jamfprofessionalservices/JamfMigrator/releases/download/v2.0.0/jamf-migrator.zip)
+Download: [JamfMigrator](https://github.com/jamfprofessionalservices/JamfMigrator/releases/download/v2.1.0/jamf-migrator.zip)
 
 Feedback in the GUI gives a simplistic overview of the success of a transfer:
 * Green - everything transferred.
@@ -31,6 +31,10 @@ A more detailed review of migration successes/failures can be found in the log, 
 
 
 ## History
+**jamf-migrator v2.0.0**<p>
+* Added the ability to migrate Jamf server accounts (users and groups).  Newly created accounts on the destination server will be created without a password (can't migrate passwords).  The account being used to authenticate to the destination server is not migrated if it also exists on the source server.  The migration of accounts depends on the existence of related sites and LDAP servers in order to be successful.
+  
+  
 **jamf-migrator v2.0.0**<p>
 * Change to the user interface.  Grouped similar categories together.
 * Added iOS items.
