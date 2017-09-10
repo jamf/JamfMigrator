@@ -1521,7 +1521,7 @@
                                         <accessibility description="iOS" identifier="iOS"/>
                                     </tabViewItem>
                                     <tabViewItem label="General" identifier="" id="88A-Nu-WEM">
-                                        <view key="view" ambiguous="YES" id="CPy-PU-zBW">
+                                        <view key="view" id="CPy-PU-zBW">
                                             <rect key="frame" x="10" y="7" width="696" height="186"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -1765,12 +1765,52 @@
                                                         <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="f3B-7V-Jjn"/>
                                                     </connections>
                                                 </button>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="85a-8h-YWe">
+                                                    <rect key="frame" x="39" y="68" width="96" height="17"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Jamf Users" id="v23-mz-drf">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VAd-jA-PuU" userLabel="Jamf Users btn">
+                                                    <rect key="frame" x="19" y="66" width="97" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <buttonCell key="cell" type="check" title="                                          " bezelStyle="regularSquare" imagePosition="left" inset="2" id="hc8-X3-Ps2">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" size="14" name="Helvetica"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="5Uf-ej-2g6"/>
+                                                    </connections>
+                                                </button>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77F-Xy-56l" userLabel="jamf Groups">
+                                                    <rect key="frame" x="170" y="68" width="96" height="17"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Jamf Groups" id="GIb-DE-w31">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gkm-20-cSk" userLabel="Jamf Groups btn">
+                                                    <rect key="frame" x="150" y="66" width="97" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <buttonCell key="cell" type="check" title="                                          " bezelStyle="regularSquare" imagePosition="left" inset="2" id="lYg-nx-gPZ">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" size="14" name="Helvetica"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="BSi-oB-ls4"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                         </view>
                                         <accessibility description="general" identifier="general"/>
                                     </tabViewItem>
                                     <tabViewItem label="Selective" identifier="3" id="Fo1-1P-mP5">
-                                        <view key="view" id="TA8-Ho-89h">
+                                        <view key="view" ambiguous="YES" id="TA8-Ho-89h">
                                             <rect key="frame" x="10" y="7" width="696" height="186"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -1802,6 +1842,12 @@
                                                                             <modifierMask key="keyEquivalentModifierMask"/>
                                                                         </menuItem>
                                                                         <menuItem title="Extension Attributes" id="In0-6L-Uiy">
+                                                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        </menuItem>
+                                                                        <menuItem title="Jamf User Accounts" id="3f5-a7-nmL">
+                                                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        </menuItem>
+                                                                        <menuItem title="Jamf Group Accounts" id="ADa-7e-23v">
                                                                             <modifierMask key="keyEquivalentModifierMask"/>
                                                                         </menuItem>
                                                                         <menuItem title="LDAP Servers" id="sCd-x0-X81" userLabel="LDAP Servers">
@@ -1951,7 +1997,7 @@
                                                                                 </tableHeaderCell>
                                                                                 <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="qvQ-q3-5UO">
                                                                                     <font key="font" metaFont="system"/>
-                                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
@@ -2028,6 +2074,10 @@
                         <outlet property="go_button" destination="fkz-qQ-OTe" id="1AO-FD-YR8"/>
                         <outlet property="iOS_tabViewItem" destination="ECI-6E-ufR" id="hDg-OB-fcs"/>
                         <outlet property="iOSsectionToMigrate_button" destination="K3i-ud-Xoc" id="oON-7T-NR8"/>
+                        <outlet property="jamfGroupAccounts_button" destination="gkm-20-cSk" id="rfl-Wf-qLy"/>
+                        <outlet property="jamfGroupAccounts_field" destination="77F-Xy-56l" id="0uJ-6J-rjU"/>
+                        <outlet property="jamfUserAccounts_button" destination="VAd-jA-PuU" id="QSV-5L-2j2"/>
+                        <outlet property="jamfUserAccounts_field" destination="85a-8h-YWe" id="U4E-G5-zh8"/>
                         <outlet property="ldapservers_button" destination="d6K-kP-2mQ" id="eNI-4j-9ns"/>
                         <outlet property="ldapservers_label_field" destination="BXm-Uk-9pd" id="L7C-ka-h9W"/>
                         <outlet property="macOS_tabViewItem" destination="Nof-Zl-FoE" id="6gS-C5-k4O"/>

@@ -71,6 +71,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var users_button: NSButton!
     @IBOutlet weak var smartUserGrps_button: NSButton!
     @IBOutlet weak var staticUserGrps_button: NSButton!
+    @IBOutlet weak var jamfUserAccounts_button: NSButton!
+    @IBOutlet weak var jamfGroupAccounts_button: NSButton!
     
     @IBOutlet weak var go_button: NSButton!
     
@@ -106,6 +108,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var packages_label_field: NSTextField!
     @IBOutlet weak var printers_label_field: NSTextField!
     @IBOutlet weak var policies_label_field: NSTextField!
+    @IBOutlet weak var jamfUserAccounts_field: NSTextField!
+    @IBOutlet weak var jamfGroupAccounts_field: NSTextField!
     // iOS button labels
     @IBOutlet weak var smart_ios_groups_label_field: NSTextField!
     @IBOutlet weak var static_ios_groups_label_field: NSTextField!
@@ -172,6 +176,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     // credentials
     var sourceCreds = ""
     var destCreds = ""
+    var jamfAdminId = 1
     
     // settings variables
     let safeCharSet = CharacterSet.alphanumerics
@@ -212,7 +217,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     // This order must match the drop down for selective migration
     var macOSEndpointArray: [String] = ["advancedcomputersearches", "computergroups", "computers", "osxconfigurationprofiles", "computerextensionattributes", "distributionpoints", "netbootservers", "packages", "policies", "printers", "scripts", "softwareupdateservers"]
     var iOSEndpointArray: [String] = ["advancedmobiledevicesearches", "mobiledeviceconfigurationprofiles", "mobiledevicegroups",  "mobiledeviceextensionattributes", "mobiledevices"]
-    var generalEndpointArray: [String] = ["advancedusersearches", "buildings", "categories", "departments", "userextensionattributes", "ldapservers", "networksegments", "sites", "users", "usergroups"]
+    var generalEndpointArray: [String] = ["advancedusersearches", "buildings", "categories", "departments", "userextensionattributes", "jamfusers", "jamfgroups", "ldapservers", "networksegments", "sites", "users", "usergroups"]
     var AllEndpointsArray = [String]()
 
     
@@ -298,6 +303,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                 && self.ldapservers_button.state == 1
                 && self.sites_button.state == 1
                 && self.networks_button.state == 1
+                && self.jamfUserAccounts_button.state == 1
+                && self.jamfGroupAccounts_button.state == 1
                 && self.smartUserGrps_button.state == 1
                 && self.staticUserGrps_button.state == 1
                 && self.users_button.state == 1) ? 1 : 0;
@@ -335,6 +342,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             self.ldapservers_button.state = self.allNone_general_button.state
             self.sites_button.state = self.allNone_general_button.state
             self.networks_button.state = self.allNone_general_button.state
+            self.jamfUserAccounts_button.state = self.allNone_general_button.state
+            self.jamfGroupAccounts_button.state = self.allNone_general_button.state
             self.smartUserGrps_button.state = self.allNone_general_button.state
             self.staticUserGrps_button.state = self.allNone_general_button.state
             self.users_button.state = self.allNone_general_button.state
@@ -752,6 +761,14 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                     objectsToMigrate += ["ldapservers"]
                 }
                 
+                if jamfUserAccounts_button.state == 1 {
+                    objectsToMigrate += ["jamfusers"]
+                }
+                
+                if jamfGroupAccounts_button.state == 1 {
+                    objectsToMigrate += ["jamfgroups"]
+                }
+                
                 if networks_button.state == 1 {
                     objectsToMigrate += ["networksegments"]
                 }
@@ -765,7 +782,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                 }
             default: break
             }
-
+            print("objectsToMigrate: \(objectsToMigrate)")
+            
             // initialize list of items to migrate then add what we want - end
             if self.debug { self.writeToHistory(stringOfText: "[- debug -] objects: \(objectsToMigrate).\n") }
             
@@ -817,6 +835,15 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                     }
                 } else {
                     // selective migration
+                    var selectedEndpoint = ""
+                    switch self.objectsToMigrate[0] {
+                    case "jamfusers":
+                        selectedEndpoint = "accounts/userid"
+                    case "jamfgroups":
+                        selectedEndpoint = "accounts/groupid"
+                    default:
+                        selectedEndpoint = self.objectsToMigrate[0]
+                    }
                     self.existingEndpoints(destEndpoint: "\(objectsToMigrate[0])")  {
                         (result: String) in
                         if self.debug { self.writeToHistory(stringOfText: "[- debug -] Returned from existing endpoints: \(result)\n") }
@@ -826,7 +853,9 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                         // create targetDataArray
                         for k in (0..<self.sourceDataArray.count) {
                             if self.srcSrvTableView.isRowSelected(k) {
-                                self.targetDataArray.append(self.sourceDataArray[k])
+                                if !(selectedEndpoint == "jamfusers" && self.sourceDataArray[k].lowercased() == self.dest_user.lowercased()) {
+                                    self.targetDataArray.append(self.sourceDataArray[k])
+                                }
                             }
                         }
                         
@@ -846,17 +875,16 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                     if nil != self.currentEPs[self.availableObjsToMigDict[objToMigrateID]!] {
                                         if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(selectedObject) already exists\n") }
                                         //self.currentEndpointID = self.currentEPs[xmlName]!
-                                        self.endPointByID(endpoint: self.objectsToMigrate[0], endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: self.targetDataArray.count, action: "update", destEpId: self.currentEPs[self.availableObjsToMigDict[objToMigrateID]!]!)
+                                        self.endPointByID(endpoint: selectedEndpoint, endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: self.targetDataArray.count, action: "update", destEpId: self.currentEPs[self.availableObjsToMigDict[objToMigrateID]!]!)
                                     } else {
-                                        self.endPointByID(endpoint: self.objectsToMigrate[0], endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: self.targetDataArray.count, action: "create", destEpId: 0)
+                                        self.endPointByID(endpoint: selectedEndpoint, endpointID: objToMigrateID, endpointCurrent: (j+1), endpointCount: self.targetDataArray.count, action: "create", destEpId: 0)
                                     }
                                 }
                             } else {
                                 // selective removal
                                 if self.debug { self.writeToHistory(stringOfText: "[- debug -] remove - endpoint: \(self.targetDataArray[j])\t endpointID: \(objToMigrateID)\t endpointName: \(self.targetDataArray[j])\n") }
-                                self.RemoveEndpoints(endpointType: self.objectsToMigrate[0], endPointID: objToMigrateID, endpointName: self.targetDataArray[j], endpointCurrent: (j+1), endpointCount: self.targetDataArray.count)
+                                self.RemoveEndpoints(endpointType: selectedEndpoint, endPointID: objToMigrateID, endpointName: self.targetDataArray[j], endpointCurrent: (j+1), endpointCount: self.targetDataArray.count)
                                 
-//                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] selective removal not implemented - would need object ID from destination server rather than source server.\n") }
                             }   // if !self.wipe_data else - end
                         }   // for j in  - end
                     }
@@ -867,8 +895,10 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
 
     
     func getEndpoints(endpoint: String, completion: @escaping (_ result: String) -> Void) {
+        URLCache.shared.removeAllCachedResponses()
         if self.debug { self.writeToHistory(stringOfText: "[- debug -] Getting \(endpoint)\n") }
         var endpointParent = ""
+        var node = ""
         switch endpoint {
         // macOS items
         case "advancedcomputersearches":
@@ -909,6 +939,10 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             endpointParent = "user_extension_attributes"
         case "usergroups":
             endpointParent = "user_groups"
+        case "jamfusers":
+            endpointParent = "users"
+        case "jamfgroups":
+            endpointParent = "groups"
         default:
             endpointParent = "\(endpoint)"
         }
@@ -927,6 +961,10 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             progressCountArray["smartusergroups"] = 0
             progressCountArray["staticusergroups"] = 0
             progressCountArray["usergroups"] = 0 // this is the recognized end point
+        case "accounts":
+            progressCountArray["jamfusers"] = 0
+            progressCountArray["jamfgroups"] = 0
+            progressCountArray["accounts"] = 0 // this is the recognized end point
         default:
             progressCountArray["\(endpoint)"] = 0
         }
@@ -935,7 +973,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         let semaphore = DispatchSemaphore(value: 0)
 
         theOpQ.addOperation {
-            var myURL = "\(self.source_jp_server)/JSSResource/\(endpoint)"
+            (endpoint == "jamfusers" || endpoint == "jamfgroups") ? (node = "accounts"):(node = endpoint)
+            var myURL = "\(self.source_jp_server)/JSSResource/\(node)"
             myURL = myURL.replacingOccurrences(of: "//JSSResource", with: "/JSSResource")
 
             let encodedURL = NSURL(string: myURL)
@@ -948,11 +987,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                 (data, response, error) -> Void in
                 if let httpResponse = response as? HTTPURLResponse {
                     print("httpResponse: \(httpResponse.statusCode)")
-                    //print(httpResponse)
-                    //print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-                    //let departmentInfo = String(data: data!, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))!
-                    //print("Department Info: \(departmentInfo)\n\n")
-                    //var deptArray: [String] = []
 
                     do {
                         if self.debug { self.writeToHistory(stringOfText: "[- debug -] Getting all endpoints from: \(myURL)\n") }
@@ -967,9 +1001,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                     if self.debug { self.writeToHistory(stringOfText: "[- debug -] Initial count for \(endpoint) found: \(endpointCount)\n") }
                                     
                                     if self.debug { self.writeToHistory(stringOfText: "[- debug -] Verify empty dictionary of objects - availableObjsToMigDict count: \(self.availableObjsToMigDict.count)\n") }
-                                    
-//                                    self.availableObjsToMigDict.removeAll()
-//                                    self.availableObjsToMigDict = [:]
                                     
                                     if endpointCount > 0 {
                                         
@@ -1006,7 +1037,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                             if self.debug { self.writeToHistory(stringOfText: "[- debug -] function - endpoint: \(endpoint), endpointID: \(l_xmlID), endpointCurrent: \(counter), endpointCount: \(endpointCount), action: \"create\", destEpId: 0\n") }
                                                             self.endPointByID(endpoint: endpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count, action: "create", destEpId: 0)
                                                         }
-                                                        //self.endPointByID(endpoint: endpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: endpointCount, action: "create", destEpId: 0)
                                                     } else {
                                                         if self.debug { self.writeToHistory(stringOfText: "[- debug -] remove - endpoint: \(endpoint)\t endpointID: \(l_xmlID)\t endpointName: \(l_xmlName)\n") }
                                                         self.RemoveEndpoints(endpointType: endpoint, endPointID: l_xmlID, endpointName: l_xmlName, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count)
@@ -1159,7 +1189,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                 }
                                                 var counter = 1
                                                 for (l_xmlID, l_xmlName) in currentGroupDict {
-    //                                                if l_xmlName != "All Managed Clients" && l_xmlName != "All Managed Servers" {
                                                         self.availableObjsToMigDict[l_xmlID] = l_xmlName
                                                         if self.goSender == "goButton" {
                                                             if !self.wipe_data  {
@@ -1167,10 +1196,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                                 if self.debug { self.writeToHistory(stringOfText: "[- debug -] function - endpoint: \(endpoint), endpointID: \(l_xmlID), endpointCurrent: \(counter), endpointCount: \(endpointCount), action: \"create\", destEpId: 0\n") }
                                                                 self.endPointByID(endpoint: localEndpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: groupCount, action: "create", destEpId: 0)
                                                             } else {
-                                                                // don't remove built-in smart groups
-    //                                                            if l_xmlName != "All Managed Clients" && l_xmlName != "All Managed Servers" && l_xmlName != "All Managed iPads" && l_xmlName != "All Managed iPhones" && l_xmlName != "All Managed iPod touches" {
+
                                                                     self.RemoveEndpoints(endpointType: localEndpoint, endPointID: l_xmlID, endpointName: l_xmlName, endpointCurrent: counter, endpointCount: groupCount)
-    //                                                            }
                                                             }   // if !self.wipe_data else - end
                                                         } else {
                                                             // populate source server under the selective tab
@@ -1184,10 +1211,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                                 
                                                             }   // DispatchQueue.main.async - end
                                                         }   // if self.goSender else - end
-    //                                                } else if counter == groupCount {
-    //                                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] remove - endpoint: \(localEndpoint)\t endpointID: \(l_xmlID)\t endpointName: \(l_xmlName)\n") }
-    //                                                    self.CreateEndpoints(endpointType: localEndpoint, endPointXML: "", endpointCurrent: counter, endpointCount: groupCount, action: "create", destEpId: 0)
-    //                                                }   // if l_xmlName - end
+
                                                     counter += 1
                                                 }   // for (l_xmlID, l_xmlName) - end
                                             }   //for g in (0...1) - end
@@ -1270,6 +1294,88 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                     }   // if endpointCount > 0
                                 }   //if let endpointInfo = endpointJSON - end
                                 
+                            case "jamfusers", "jamfgroups":
+                                let accountsDict = endpointJSON as Dictionary<String, Any>
+                                let usersGroups = accountsDict["accounts"] as! Dictionary<String, Any>
+                                
+                                if let endpointInfo = usersGroups[endpointParent] as? [Any] {
+                                    let endpointCount: Int = endpointInfo.count
+                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] Initial count for \(node) found: \(endpointCount)\n") }
+                                    
+                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] Verify empty dictionary of objects - availableObjsToMigDict count: \(self.availableObjsToMigDict.count)\n") }
+
+                                    if endpointCount > 0 {
+                                        
+//                                        self.existingEndpoints(destEndpoint: "accounts")  {
+//                                            (result: String) in
+//                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Returned from existing \(node): \(result)\n") }
+                                        
+                                            for i in (0..<endpointCount) {
+                                                if i == 0 { self.availableObjsToMigDict.removeAll() }
+                                                
+                                                let record = endpointInfo[i] as! [String : AnyObject]
+                                                if !(endpoint == "jamfusers" && record["name"] as! String? == self.dest_user) {
+                                                    self.availableObjsToMigDict[record["id"] as! Int] = record["name"] as! String?
+                                                }
+                                                
+                                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] Current number of \(endpoint) to process: \(self.availableObjsToMigDict.count)\n") }
+                                            }   // for i in (0..<endpointCount) end
+                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Found total of \(self.availableObjsToMigDict.count) \(endpoint) to process\n") }
+                                            
+                                            var counter = 1
+                                            if self.goSender == "goButton" {
+                                                for (l_xmlID, l_xmlName) in self.availableObjsToMigDict {
+                                                    if !self.wipe_data  {
+                                                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] check for ID on \(l_xmlName): \(String(describing: self.currentEPs[l_xmlName]))\n") }
+
+                                                        if self.currentEPs[l_xmlName] != nil {
+                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) already exists\n") }
+                                                            //self.currentEndpointID = self.currentEPs[l_xmlName]!
+                                                            self.endPointByID(endpoint: endpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count, action: "update", destEpId: self.currentEPs[l_xmlName]!)
+                                                        } else {
+                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) - create\n") }
+                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] function - endpoint: \(endpoint), endpointID: \(l_xmlID), endpointCurrent: \(counter), endpointCount: \(endpointCount), action: \"create\", destEpId: 0\n") }
+                                                            self.endPointByID(endpoint: endpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count, action: "create", destEpId: 0)
+                                                        }
+                                                    } else {
+                                                        if !(endpoint == "jamfusers" && "\(l_xmlName)".lowercased() == self.dest_user.lowercased()) {
+                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] remove - endpoint: \(endpoint)\t endpointID: \(l_xmlID)\t endpointName: \(l_xmlName)\n") }
+                                                            self.RemoveEndpoints(endpointType: endpoint, endPointID: l_xmlID, endpointName: l_xmlName, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count)                                                        }
+
+
+                                                    }   // if !self.wipe_data else - end
+                                                    counter+=1
+                                                }   // for (l_xmlID, l_xmlName) in availableObjsToMigDict
+                                            } else {
+                                                // populate source server under the selective tab
+                                                for (l_xmlID, l_xmlName) in self.availableObjsToMigDict {
+                                                    DispatchQueue.main.async {
+                                                        //print("adding \(l_xmlName) to array")
+                                                        self.availableIDsToMigDict[l_xmlName] = l_xmlID
+                                                        self.sourceDataArray.append(l_xmlName)
+                                                        
+                                                        self.srcSrvTableView.reloadData()
+                                                        
+                                                    }   // DispatchQueue.main.async - end
+                                                    counter+=1
+                                                }   // for (l_xmlID, l_xmlName) in availableObjsToMigDict
+                                                DispatchQueue.main.async {
+                                                    //self.sourceDataArray.sort()
+                                                    self.sourceDataArray = self.sourceDataArray.sorted{$0.localizedCompare($1) == .orderedAscending}
+                                                    
+                                                    self.srcSrvTableView.reloadData()
+                                                }
+                                            }   // if self.goSender else - end
+//                                        }   // self.existingEndpoints - end
+                                    } else {
+                                        if endpoint == self.objectsToMigrate.last {
+                                            self.rmDELETE()
+                                            self.goButtonEnabled(button_status: true)
+                                            completion("Got endpoint - \(endpoint)")
+                                        }
+                                    }// if endpointCount - end
+                                }   // end if let buildings, departments...
+                                
                             default:
                                 break
                             }   // switch - end
@@ -1293,8 +1399,12 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     }
     
     func endPointByID(endpoint: String, endpointID: Int, endpointCurrent: Int, endpointCount: Int, action: String, destEpId: Int) {
+        URLCache.shared.removeAllCachedResponses()
+        if self.debug { self.writeToHistory(stringOfText: "[- debug -] endpoint passed to endPointByID: \(endpoint)\n") }
         theOpQ.maxConcurrentOperationCount = 1
         let semaphore = DispatchSemaphore(value: 0)
+//        
+//        endpoint == "jamfusers" ? (subnode == "userid"):(subnode == "groupid")
         
         var localEndPointType = ""
         switch endpoint {
@@ -1307,10 +1417,14 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         default:
             localEndPointType = endpoint
         }
-        
+        if !( endpoint == "jamfuser" && endpointID == jamfAdminId) {
         theOpQ.addOperation {
             var myURL = "\(self.source_jp_server)/JSSResource/\(localEndPointType)/id/\(endpointID)"
             myURL = myURL.replacingOccurrences(of: "//JSSResource", with: "/JSSResource")
+            myURL = myURL.replacingOccurrences(of: "/JSSResource/jamfusers/id", with: "/JSSResource/accounts/userid")
+            myURL = myURL.replacingOccurrences(of: "/JSSResource/jamfgroups/id", with: "/JSSResource/accounts/groupid")
+            myURL = myURL.replacingOccurrences(of: "id/id/", with: "id/")
+            if self.debug { self.writeToHistory(stringOfText: "[- debug -] fetching XML from: \(myURL)\n") }
             let encodedURL = NSURL(string: myURL)
             let request = NSMutableURLRequest(url: encodedURL! as URL)
             request.httpMethod = "GET"
@@ -1368,7 +1482,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                             PostXML = regexComp.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "\(self.dest_jp_server)")
                             
                         case "mobiledevices":
-                            for xmlTag in ["initial_entry_date_epoch", "initial_entry_date_utc", "last_enrollment_epoch", "last_enrollment_utc", "location", "applications", "certificates", "configuration_profiles", "provisioning_profiles", "mobile_device_groups", "extension_attributes"] {
+                            for xmlTag in ["initial_entry_date_epoch", "initial_entry_date_utc", "last_enrollment_epoch", "last_enrollment_utc", "applications", "certificates", "configuration_profiles", "provisioning_profiles", "mobile_device_groups", "extension_attributes"] {
                                 PostXML = self.rmXmlData(theXML: PostXML, theTag: xmlTag)
                             }
                             
@@ -1548,6 +1662,41 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                         
                         self.CreateEndpoints(endpointType: endpoint, endPointXML: PostXML, endpointCurrent: endpointCurrent, endpointCount: endpointCount, action: action, destEpId: destEpId)
                         
+                    case "jamfusers", "jamfgroups", "accounts/userid", "accounts/groupid":
+                        var accountType = ""
+                        switch endpoint {
+                            case "accounts/userid":
+                                accountType = "jamfusers"
+                            case "accounts/groupid":
+                                accountType = "jamfgroups"
+                        default:
+                            accountType = endpoint
+                        }
+
+                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] processing ldapservers\(endpoint) - verbose\n") }
+                        // remove password from XML, since it doesn't work on the new server
+                            let regexComp = try! NSRegularExpression(pattern: "<password_sha256 since=\"9.32\">(.*?)</password_sha256>", options:.caseInsensitive)
+                            PostXML = regexComp.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "")
+                            //print("\nXML: \(PostXML)")
+                        if action == "create" {
+                            // newly created accounts are disabled
+                            let regexComp1 = try! NSRegularExpression(pattern: "<enabled>Enabled</enabled>", options:.caseInsensitive)
+                            PostXML = regexComp1.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "<enabled>Disabled</enabled>")
+                        } else {
+                            // don't change enabled status of existing accounts on destination server.
+                            for xmlTag in ["enabled"] {
+                                PostXML = self.rmXmlData(theXML: PostXML, theTag: xmlTag)
+                            }
+                        }
+                        
+                        if self.getEndpointInProgress != endpoint {
+                            self.endpointInProgress = endpoint
+                            self.getStatusInit(endpoint: endpoint, count: endpointCount)
+                        }
+                        self.get_completed_field.stringValue = "\(endpointCurrent)"
+                        
+                        self.CreateEndpoints(endpointType: accountType, endPointXML: PostXML, endpointCurrent: endpointCurrent, endpointCount: endpointCount, action: action, destEpId: destEpId)
+                        
                     default:
                         if self.debug { self.writeToHistory(stringOfText: "[- debug -] Unknown endpoint: \(endpoint)\n") }
                     }   // switch - end
@@ -1566,10 +1715,12 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             task.resume()
             semaphore.wait()
         }   // theOpQ - end
+        }
     }
     
     func CreateEndpoints(endpointType: String, endPointXML: String, endpointCurrent: Int, endpointCount: Int, action: String, destEpId: Int) {
         // this is where we create the new endpoint
+        if self.debug { self.writeToHistory(stringOfText: "[- debug -] Creating new: \(endpointType)\n") }
         var DestURL = ""
         let destinationEpId = destEpId
         //if self.debug { self.writeToHistory(stringOfText: "[- debug -] ----- Posting #\(endpointCurrent): \(endpointType) -----\n") }
@@ -1578,14 +1729,14 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         let encodedXML = endPointXML.data(using: String.Encoding.utf8)
         var localEndPointType = ""
         switch endpointType {
-            case "smartcomputergroups", "staticcomputergroups":
-                    localEndPointType = "computergroups"
-            case "smartiosgroups", "staticiosgroups":
-                localEndPointType = "mobiledevicegroups"
+        case "smartcomputergroups", "staticcomputergroups":
+            localEndPointType = "computergroups"
+        case "smartiosgroups", "staticiosgroups":
+            localEndPointType = "mobiledevicegroups"
         case "smartusergroups", "staticusergroups":
             localEndPointType = "usergroups"
-            default:
-                localEndPointType = endpointType
+        default:
+            localEndPointType = endpointType
         }
 //        if endpointType == "smartcomputergroups" || endpointType == "staticcomputergroups" {
 //            localEndPointType = "computergroups"
@@ -1594,7 +1745,11 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         theCreateQ.addOperation {
 
             DestURL = "\(self.dest_jp_server_field.stringValue)/JSSResource/" + localEndPointType + "/id/\(destinationEpId)"
+            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Original Dest. URL: \(DestURL)\n") }
             DestURL = DestURL.replacingOccurrences(of: "//JSSResource", with: "/JSSResource")
+            DestURL = DestURL.replacingOccurrences(of: "/JSSResource/jamfusers/id", with: "/JSSResource/accounts/userid")
+            DestURL = DestURL.replacingOccurrences(of: "/JSSResource/jamfgroups/id", with: "/JSSResource/accounts/groupid")
+            
             if self.debug { self.writeToHistory(stringOfText: "[- debug -] Action: \(action)\t URL: \(DestURL)\t Object \(endpointCurrent) of \(endpointCount)\n") }
             if self.debug { self.writeToHistory(stringOfText: "[- debug -] Object XML: \(endPointXML)\n") }
             
@@ -1720,6 +1875,9 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             theOpQ.addOperation {
                 var DestURL = "\(self.dest_jp_server_field.stringValue)/JSSResource/" + localEndPointType + "/id/\(endPointID)"
                 DestURL = DestURL.replacingOccurrences(of: "//JSSResource", with: "/JSSResource")
+                DestURL = DestURL.replacingOccurrences(of: "/JSSResource/jamfusers/id", with: "/JSSResource/accounts/userid")
+                DestURL = DestURL.replacingOccurrences(of: "/JSSResource/jamfgroups/id", with: "/JSSResource/accounts/groupid")
+                DestURL = DestURL.replacingOccurrences(of: "id/id/", with: "id/")
                 
                 if self.debug { self.writeToHistory(stringOfText: "[- debug -] removing \(endpointType) with ID \(endPointID)  -  Object \(endpointCurrent) of \(endpointCount)\n") }
                 if self.debug { self.writeToHistory(stringOfText: "\n[- debug -] removal URL: \(DestURL)\n") }
@@ -1789,6 +1947,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                         if error != nil {
                         }
                     } else {
+                        if self.debug { self.writeToHistory(stringOfText: "\n[- debug -] endpointCount: \(endpointCount)\t endpointCurrent: \(endpointCurrent)\n") }
+
                         if endpointCount == endpointCurrent {
                             // check for file that allows deleting data from destination server, delete if found - start
                             self.rmDELETE()
@@ -1807,7 +1967,13 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     }
     
     func existingEndpoints(destEndpoint: String, completion: @escaping (_ result: String) -> Void) {
-        print("\nGetting existing endpoints: \(destEndpoint)\n")
+        URLCache.shared.removeAllCachedResponses()
+        currentEPs.removeAll()
+        var destXmlName = ""
+        var existingEndpointNode = ""
+        (destEndpoint == "jamfusers" || destEndpoint == "jamfgroups") ? (existingEndpointNode = "accounts"):(existingEndpointNode = destEndpoint)
+        print("\nGetting existing endpoints: \(existingEndpointNode)\n")
+        var destEndpointDict:(Any)? = nil
         var endpointParent = ""
         switch destEndpoint {
         // macOS items
@@ -1847,19 +2013,19 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             endpointParent = "user_extension_attributes"
         case "usergroups":
             endpointParent = "user_groups"
+        case "jamfusers", "jamfgroups":
+            endpointParent = "accounts"
         default:
             endpointParent = "\(destEndpoint)"
         }
-        
-        currentEPs.removeAll()
-        var destXmlName = ""
         
         //theOpQ.maxConcurrentOperationCount = 1
         let semaphore = DispatchSemaphore(value: 0)
         destEPQ.async {
             //print("Entered destEPQ")
-            var destURL = "\(self.dest_jp_server)/JSSResource/\(destEndpoint)"
+            var destURL = "\(self.dest_jp_server)/JSSResource/\(existingEndpointNode)"
             destURL = destURL.replacingOccurrences(of: "//JSSResource", with: "/JSSResource")
+            print("existing endpoints URL: \(destURL)")
             
             let destEncodedURL = NSURL(string: destURL)
             let destRequest = NSMutableURLRequest(url: destEncodedURL! as URL)
@@ -1904,10 +2070,19 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                             }   //if let destEndpointInfo = destEndpointJSON - end
                                 
                             default:
-                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] getting current \(endpointParent) on destination server\n") }
-                                if let destEndpointInfo = destEndpointJSON["\(endpointParent)"] as? [Any] {
+                                if destEndpoint == "jamfusers" || destEndpoint == "jamfgroups" {
+                                    let accountsDict = destEndpointJSON as Dictionary<String, Any>
+                                    let usersGroups = accountsDict["accounts"] as! Dictionary<String, Any>
+                                    print("users: \(String(describing: usersGroups["users"]))")
+                                    print("groups: \(String(describing: usersGroups["groups"]))")
+                                    destEndpoint == "jamfusers" ? (destEndpointDict = usersGroups["users"] as? Any):(destEndpointDict = usersGroups["groups"] as? Any)
+                                } else {
+                                    destEndpointDict = destEndpointJSON["\(existingEndpointNode)"]
+                                }
+                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] getting current \(existingEndpointNode) on destination server\n") }
+                                if let destEndpointInfo = destEndpointDict as? [Any] {
                                     let destEndpointCount: Int = destEndpointInfo.count
-                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] existing \(destEndpoint) found: \(destEndpointCount) on destination server\n") }
+                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] existing \(existingEndpointNode) found: \(destEndpointCount) on destination server\n") }
                                     
                                     if destEndpointCount > 0 {
                                         for i in (0..<destEndpointCount) {
@@ -1925,21 +2100,23 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                     }   // if destEndpointCount > 0 - end
                                 }   // if let destEndpointInfo - end
                             }   // switch - end
+                        } else {
+                            self.currentEPs.removeAll()
+                            completion("error parsing JSON")
                         }   // if let destEndpointJSON - end
                         
-                    } catch {
-                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] Existing endpoints: error serializing JSON: \(error)\n") }
                     }   // end do/catch
                     
                     if httpResponse.statusCode >= 199 && httpResponse.statusCode <= 299 {
                         //print(httpResponse.statusCode)
-                        
+                        print("returning existing endpoints: \(self.currentEPs)")
                         completion("\nCurrent endpoints - \(self.currentEPs)")
                     } else {
                         // something went wrong
                         completion("\ndestination count error")
                         
                     }   // if httpResponse/else - end
+                
                 }   // if let httpResponse - end
                 semaphore.signal()
                 if error != nil {
@@ -2205,6 +2382,10 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         case "usergroups":
             smartUserGrps_label_field.textColor = theColor
             staticUserGrps_label_field.textColor = theColor
+        case "jamfusers", "accounts/userid":
+            jamfUserAccounts_field.textColor = theColor
+        case "jamfgroups", "accounts/groupid":
+            jamfGroupAccounts_field.textColor = theColor
         case "smartusergroups":
             smartUserGrps_label_field.textColor = theColor
         case "staticusergroups":
@@ -2408,6 +2589,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         ldapservers_button.state = 1
         networks_button.state = 1
         users_button.state = 1
+        jamfUserAccounts_button.state = 1
+        jamfGroupAccounts_button.state = 1
         smartUserGrps_button.state = 1
         staticUserGrps_button.state = 1
 
