@@ -1,7 +1,9 @@
 # JamfMigrator
 A tool to migrate data granularly between Jamf Pro servers
 
-![alt text](https://raw.githubusercontent.com/jamfprofessionalservices/JamfMigrator/master/jamf-migrator/images/migrator1.png "JamfMigrator")
+![alt text](https://github.com/jamfprofessionalservices/JamfMigrator/blob/master/jamf-migrator/images/migrator2.png "JamfMigrator")
+
+Download: [JamfMigrator](https://github.com/jamfprofessionalservices/JamfMigrator/releases/download/v2.0.0/jamf-migrator.zip)
 
 Feedback in the GUI gives a simplistic overview of the success of a transfer:
 * Green - everything transferred.
@@ -29,6 +31,13 @@ A more detailed review of migration successes/failures can be found in the log, 
 
 
 ## History
+**jamf-migrator v2.0.0**<p>
+* Change to the user interface.  Grouped similar categories together.
+* Added iOS items.
+* Selective migration now allows the selection of multiple items, using control and/or shift key.
+* Added selective removal of items within a category.
+
+
 **jamf-migrator v1.2.1**<p>
 * fixed issue where app would hang if last/only item migrated had no endpoints.
 * credentials no longer needed for source server when removing data.
