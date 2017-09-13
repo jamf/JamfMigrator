@@ -2164,10 +2164,10 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                     if self.debug { self.writeToHistory(stringOfText: "[- debug -] checking: \(myURL)\n") }
                     
                     let encodedURL = NSURL(string: myURL)
-                    let request = NSMutableURLRequest(url: encodedURL! as URL)
-                    request.httpMethod = "HEAD"
                     let configuration = URLSessionConfiguration.default
-
+                    var request = URLRequest(url: encodedURL!.appendingPathComponent("/JSSResource/accounts")!)
+                    request.httpMethod = "HEAD"
+                    
                     let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
                     let task = session.dataTask(with: request as URLRequest, completionHandler: {
                         (data, response, error) -> Void in
