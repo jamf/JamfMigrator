@@ -2160,19 +2160,22 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             if self.debug { self.writeToHistory(stringOfText: "[- debug -] --- checking availability of server: \(serverURL)\n") }
             
                 authQ.sync {
-                    var myURL = "\(serverURL)"
-                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] checking: \(myURL)\n") }
+                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] checking: \(serverURL)\n") }
                     
-                    let encodedURL = NSURL(string: myURL)
+                    guard let encodedURL = URL(string: serverURL) else {
+                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] --- Cannot cast to URL: \(serverURL)\n") }
+                        completion(false)
+                        return
+                    }
                     let configuration = URLSessionConfiguration.default
-                    var request = URLRequest(url: encodedURL!.appendingPathComponent("/JSSResource/accounts")!)
+                    var request = URLRequest(url: encodedURL.appendingPathComponent("/JSSResource/accounts"))
                     request.httpMethod = "HEAD"
                     
                     let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
                     let task = session.dataTask(with: request as URLRequest, completionHandler: {
                         (data, response, error) -> Void in
                         if let httpResponse = response as? HTTPURLResponse {
-                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Server check: \(myURL), httpResponse: \(httpResponse.statusCode)\n") }
+                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Server check: \(serverURL), httpResponse: \(httpResponse.statusCode)\n") }
                             
                                 available = true
 
