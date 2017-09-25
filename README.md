@@ -32,7 +32,9 @@ A more detailed review of migration successes/failures can be found in the log, 
 
 ## History
 **jamf-migrator v2.1.3**<p>
-* Fixed smart group migration failures when done selectively.  Fixed advanced computer search duplication if migrated more then once, they should update now if changed.
+* Fixed smart group migration failures when done selectively.
+* Fixed advanced computer search duplication if migrated more then once, they should update now if changed.
+* Fixed authentication verification when Jamf Server utilizes SSO (thanks @ftiff).
 
 
 **jamf-migrator v2.1.0**<p>
@@ -49,6 +51,7 @@ A more detailed review of migration successes/failures can be found in the log, 
 **jamf-migrator v1.2.1**<p>
 * fixed issue where app would hang if last/only item migrated had no endpoints.
 * credentials no longer needed for source server when removing data.
+* UI button improvememts for select all/none (thanks @jdhovaland).
 
 
 **jamf-migrator v1.2.0**<p>
