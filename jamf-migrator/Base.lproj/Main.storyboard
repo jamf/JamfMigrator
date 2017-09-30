@@ -1014,11 +1014,11 @@
                                 <tabViewItems>
                                     <tabViewItem label="macOS" identifier="1" id="Nof-Zl-FoE">
                                         <view key="view" id="fn5-oe-BJC">
-                                            <rect key="frame" x="10" y="7" width="250" height="0.0"/>
+                                            <rect key="frame" x="10" y="7" width="696" height="186"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tabView fixedFrame="YES" drawsBackground="NO" allowsTruncatedLabels="NO" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="xIe-Jb-eyh">
-                                                    <rect key="frame" x="-4" y="-191" width="702" height="191"/>
+                                                    <rect key="frame" x="-4" y="-5" width="702" height="191"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                     <tabViewItems>
@@ -1306,6 +1306,23 @@
                                                                         <connections>
                                                                             <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="7pj-OG-TqB"/>
                                                                         </connections>
+                                                                    </button>
+                                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jh1-S4-tyb" userLabel="directory bindings">
+                                                                        <rect key="frame" x="233" y="67" width="128" height="17"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Directory Bindings" id="zwS-WF-yjC">
+                                                                            <font key="font" metaFont="system"/>
+                                                                            <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                        </textFieldCell>
+                                                                    </textField>
+                                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tfr-3a-8nS" userLabel="directory bindings btn">
+                                                                        <rect key="frame" x="213" y="65" width="139" height="20"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                        <buttonCell key="cell" type="check" title="                                          " bezelStyle="regularSquare" imagePosition="left" inset="2" id="0GC-Jt-7ah">
+                                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                            <font key="font" size="14" name="Helvetica"/>
+                                                                        </buttonCell>
                                                                     </button>
                                                                 </subviews>
                                                             </view>
@@ -1951,6 +1968,9 @@
                                                                         </menuItem>
                                                                         <menuItem title="Computers" id="ry3-B0-mRx" userLabel="Computers"/>
                                                                         <menuItem title="Configuration Profiles" id="Hhd-E2-H4G" userLabel="Config. Profiles"/>
+                                                                        <menuItem title="Directory Bindings" id="0Kb-4Y-MlD">
+                                                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        </menuItem>
                                                                         <menuItem title="Extension Attributes" id="Abg-uI-loX"/>
                                                                         <menuItem title="File Shares" id="TiA-cD-OrE"/>
                                                                         <menuItem title="Netboot Servers" id="e78-AX-SO6"/>
@@ -2062,6 +2082,8 @@
                         <outlet property="dest_jp_server_field" destination="o5b-UU-ZL9" id="Vce-gN-uvY"/>
                         <outlet property="dest_pwd_field" destination="2FL-Bn-T2a" id="DJe-ck-mHT"/>
                         <outlet property="dest_user_field" destination="U40-E2-DvW" id="zbJ-fX-KP1"/>
+                        <outlet property="directory_bindings_button" destination="tfr-3a-8nS" id="Me9-JY-iHK"/>
+                        <outlet property="directory_bindings_field" destination="Jh1-S4-tyb" id="6iu-zl-ABJ"/>
                         <outlet property="ext_attribs_button" destination="hPA-qy-uIr" id="ztY-kw-YX2"/>
                         <outlet property="extension_attributes_label_field" destination="c4g-bk-XZJ" id="UKZ-VJ-d26"/>
                         <outlet property="file_shares_label_field" destination="b5v-KK-ZKw" id="cRu-fH-njt"/>

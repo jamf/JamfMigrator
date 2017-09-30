@@ -38,6 +38,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var allNone_button: NSButton!
     @IBOutlet weak var advcompsearch_button: NSButton!
     @IBOutlet weak var computers_button: NSButton!
+    @IBOutlet weak var directory_bindings_button: NSButton!
     @IBOutlet weak var fileshares_button: NSButton!
     @IBOutlet weak var sus_button: NSButton!
     @IBOutlet weak var netboot_button: NSButton!
@@ -97,6 +98,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     // macOS button labels
     @IBOutlet weak var advcompsearch_label_field: NSTextField!
     @IBOutlet weak var computers_label_field: NSTextField!
+    @IBOutlet weak var directory_bindings_field: NSTextField!
     @IBOutlet weak var file_shares_label_field: NSTextField!
     @IBOutlet weak var sus_label_field: NSTextField!
     @IBOutlet weak var netboot_label_field: NSTextField!
@@ -191,7 +193,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     var sourceURL = ""
     var destURL = ""
     
-    var endpointDefDict = ["computergroups":"computer_groups", "mobiledevicegroups":"mobile_device_groups", "usergroups":"user_groups", "userextensionattributes":"user_extension_attributes", "advancedusersearches":"advanced_user_searches"]
+    var endpointDefDict = ["computergroups":"computer_groups","directorybindings":"directory_bindings", "mobiledevicegroups":"mobile_device_groups", "usergroups":"user_groups", "userextensionattributes":"user_extension_attributes", "advancedusersearches":"advanced_user_searches"]
     var xmlName = ""
     var destEPs = [String:Int]()
     var currentEPs = [String:Int]()
@@ -214,7 +216,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var get_found_field: NSTextField!
     
     // This order must match the drop down for selective migration
-    var macOSEndpointArray: [String] = ["advancedcomputersearches", "computergroups", "computers", "osxconfigurationprofiles", "computerextensionattributes", "distributionpoints", "netbootservers", "packages", "policies", "printers", "scripts", "softwareupdateservers"]
+    var macOSEndpointArray: [String] = ["advancedcomputersearches", "computergroups", "computers", "osxconfigurationprofiles", "directorybindings", "computerextensionattributes", "distributionpoints", "netbootservers", "packages", "policies", "printers", "scripts", "softwareupdateservers"]
     var iOSEndpointArray: [String] = ["advancedmobiledevicesearches", "mobiledeviceconfigurationprofiles", "mobiledevicegroups",  "mobiledeviceextensionattributes", "mobiledevices"]
     var generalEndpointArray: [String] = ["advancedusersearches", "buildings", "categories", "departments", "userextensionattributes", "jamfusers", "jamfgroups", "ldapservers", "networksegments", "sites", "users", "usergroups"]
     var AllEndpointsArray = [String]()
@@ -272,6 +274,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             self.allNone_button.state = (
                 self.advcompsearch_button.state == 1
                     && self.computers_button.state == 1
+                    && self.directory_bindings_button.state == 1
                     && self.fileshares_button.state == 1
                     && self.sus_button.state == 1
                     && self.netboot_button.state == 1
@@ -314,6 +317,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         if deviceType() == "macOS" {
             self.advcompsearch_button.state = self.allNone_button.state
             self.computers_button.state = self.allNone_button.state
+            self.directory_bindings_button.state = self.allNone_button.state
             self.fileshares_button.state = self.allNone_button.state
             self.sus_button.state = self.allNone_button.state
             self.netboot_button.state = self.allNone_button.state
@@ -664,6 +668,10 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                     objectsToMigrate += ["distributionpoints"]
                 }
                 
+                if directory_bindings_button.state == 1 {
+                    objectsToMigrate += ["directorybindings"]
+                }
+                
                 if computers_button.state == 1 {
                     objectsToMigrate += ["computers"]
                 }
@@ -904,6 +912,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             endpointParent = "advanced_computer_searches"
         case "computerextensionattributes":
             endpointParent = "computer_extension_attributes"
+        case "directorybindings":
+            endpointParent = "directory_bindings"
         case "computergroups":
             endpointParent = "computer_groups"
         case "distributionpoints":
@@ -994,7 +1004,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                             if self.debug { self.writeToHistory(stringOfText: "[- debug -] endpointJSON: \(endpointJSON))") }
                             
                             switch endpoint {
-                            case "advancedcomputersearches", "buildings", "categories", "computers", "computerextensionattributes", "departments", "distributionpoints", "ldapservers", "netbootservers", "networksegments", "osxconfigurationprofiles", "packages", "printers", "scripts", "sites", "softwareupdateservers", "users", "mobiledeviceconfigurationprofiles", "mobiledeviceapplications", "advancedmobiledevicesearches", "mobiledeviceextensionattributes", "mobiledevices", "userextensionattributes", "advancedusersearches":
+                            case "advancedcomputersearches", "buildings", "categories", "computers", "computerextensionattributes", "departments", "distributionpoints", "directorybindings", "ldapservers", "netbootservers", "networksegments", "osxconfigurationprofiles", "packages", "printers", "scripts", "sites", "softwareupdateservers", "users", "mobiledeviceconfigurationprofiles", "mobiledeviceapplications", "advancedmobiledevicesearches", "mobiledeviceextensionattributes", "mobiledevices", "userextensionattributes", "advancedusersearches":
                                 if let endpointInfo = endpointJSON[endpointParent] as? [Any] {
                                     let endpointCount: Int = endpointInfo.count
                                     if self.debug { self.writeToHistory(stringOfText: "[- debug -] Initial count for \(endpoint) found: \(endpointCount)\n") }
@@ -1453,7 +1463,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                         //                   print("\n\nRemoved id tag: \(XMLString)")
                         
                         switch endpoint {
-                        case "buildings", "departments", "sites", "categories", "distributionpoints", "netbootservers", "softwareupdateservers", "computerextensionattributes", "scripts", "printers", "osxconfigurationprofiles", "mobiledeviceconfigurationprofiles", "mobiledeviceapplications", "advancedmobiledevicesearches", "mobiledeviceextensionattributes", "mobiledevicegroups", "smartiosgroups", "staticiosgroups", "mobiledevices", "smartusergroups", "staticusergroups", "userextensionattributes", "advancedusersearches":
+                        case "buildings", "departments", "sites", "categories", "directorybindings", "distributionpoints", "netbootservers", "softwareupdateservers", "computerextensionattributes", "scripts", "printers", "osxconfigurationprofiles", "mobiledeviceconfigurationprofiles", "mobiledeviceapplications", "advancedmobiledevicesearches", "mobiledeviceextensionattributes", "mobiledevicegroups", "smartiosgroups", "staticiosgroups", "mobiledevices", "smartusergroups", "staticusergroups", "userextensionattributes", "advancedusersearches":
                             if self.debug { self.writeToHistory(stringOfText: "[- debug -] processing \(endpoint) - verbose\n") }
                             //print("\nXML: \(PostXML)")
                             
@@ -1509,7 +1519,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                             //                        }
                             self.CreateEndpoints(endpointType: endpoint, endPointXML: PostXML, endpointCurrent: endpointCurrent, endpointCount: endpointCount, action: action, destEpId: destEpId)
                             
-                        case "ldapservers":
+                        case "directorybindings", "ldapservers":
                             if self.debug { self.writeToHistory(stringOfText: "[- debug -] processing ldapservers - verbose\n") }
                             // remove password from XML, since it doesn't work on the new server
                             let regexComp = try! NSRegularExpression(pattern: "<password_sha256 since=\"9.23\">(.*?)</password_sha256>", options:.caseInsensitive)
@@ -1993,6 +2003,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             endpointParent = "computer_groups"
         case "distributionpoints":
             endpointParent = "distribution_points"
+        case "directorybindings":
+            endpointParent = "directory_bindings"
         case "netbootservers":
             endpointParent = "netboot_servers"
         case "osxconfigurationprofiles":
@@ -2335,6 +2347,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             advcompsearch_label_field.textColor = theColor
         case "computers":
             computers_label_field.textColor = theColor
+        case "directorybindings":
+            directory_bindings_field.textColor = theColor
         case "distributionpoints":
             file_shares_label_field.textColor = theColor
         case "softwareupdateservers":
@@ -2576,6 +2590,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         allNone_button.state = 1
         advcompsearch_button.state = 1
         computers_button.state = 1
+        directory_bindings_button.state = 1
         netboot_button.state = 1
         osxconfigurationprofiles_button.state = 1
         sus_button.state = 1
