@@ -3,7 +3,7 @@ A tool to migrate data granularly between Jamf Pro servers
 
 ![alt text](https://github.com/jamfprofessionalservices/JamfMigrator/blob/master/jamf-migrator/images/migrator2.png "JamfMigrator")
 
-Download: [JamfMigrator](https://github.com/jamfprofessionalservices/JamfMigrator/releases/download/v2.1.0/jamf-migrator.zip)
+Download: [JamfMigrator](https://github.com/jamfprofessionalservices/JamfMigrator/releases/download/v2.1.3/jamf-migrator.zip)
 
 Feedback in the GUI gives a simplistic overview of the success of a transfer:
 * Green - everything transferred.
@@ -31,7 +31,13 @@ A more detailed review of migration successes/failures can be found in the log, 
 
 
 ## History
-**jamf-migrator v2.0.0**<p>
+**jamf-migrator v2.1.3**<p>
+* Fixed smart group migration failures when done selectively.
+* Fixed advanced computer search duplication if migrated more then once, they should update now if changed.
+* Fixed authentication verification when Jamf Server utilizes SSO (thanks @ftiff).
+
+
+**jamf-migrator v2.1.0**<p>
 * Added the ability to migrate Jamf server accounts (users and groups).  Newly created accounts on the destination server will be created without a password (can't migrate passwords).  The account being used to authenticate to the destination server is not migrated if it also exists on the source server.  The migration of accounts depends on the existence of related sites and LDAP servers in order to be successful.
   
   
@@ -45,6 +51,7 @@ A more detailed review of migration successes/failures can be found in the log, 
 **jamf-migrator v1.2.1**<p>
 * fixed issue where app would hang if last/only item migrated had no endpoints.
 * credentials no longer needed for source server when removing data.
+* UI button improvememts for select all/none (thanks @jdhovaland).
 
 
 **jamf-migrator v1.2.0**<p>
