@@ -2023,7 +2023,7 @@
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <clipView key="contentView" ambiguous="YES" id="xbF-pR-KVb">
                                                                 <rect key="frame" x="1" y="1" width="395" height="166"/>
-                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" id="FBt-wQ-W9U" userLabel="Source Table View">
                                                                         <rect key="frame" x="0.0" y="0.0" width="395" height="166"/>
@@ -2079,6 +2079,17 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button hidden="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NrN-I8-3SR">
+                                <rect key="frame" x="766" y="47" width="113" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="stop" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="znn-hy-qZ8">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="stopButton:" target="XfG-lQ-9wD" id="yZ8-PL-43v"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
@@ -2178,6 +2189,7 @@
                         <outlet property="static_groups_label_field" destination="O25-Wj-mUa" id="G4L-uh-otw"/>
                         <outlet property="static_ios_groups_button" destination="qhC-l8-gex" id="SQg-Cx-Adn"/>
                         <outlet property="static_ios_groups_label_field" destination="Uo3-PW-fQz" id="yVT-a4-w1N"/>
+                        <outlet property="stop_button" destination="NrN-I8-3SR" id="E9u-6R-3rj"/>
                         <outlet property="sus_button" destination="0Oq-z3-hPc" id="tAC-fB-AAZ"/>
                         <outlet property="sus_label_field" destination="TGh-dy-khY" id="l8I-32-bex"/>
                         <outlet property="userEA_button" destination="5QD-Ga-H9N" id="Ib7-Aj-kw9"/>
@@ -2195,5 +2207,6 @@
         <image name="0" width="72" height="72"/>
         <image name="go" width="87" height="39"/>
         <image name="quit" width="86" height="39"/>
+        <image name="stop" width="74" height="32"/>
     </resources>
 </document>

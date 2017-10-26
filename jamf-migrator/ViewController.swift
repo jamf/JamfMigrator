@@ -77,6 +77,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var jamfGroupAccounts_button: NSButton!
     
     @IBOutlet weak var go_button: NSButton!
+    @IBOutlet weak var stop_button: NSButton!
     
     // Migration mode/platform tabs/var
     @IBOutlet weak var bulk_tabViewItem: NSTabViewItem! // bulk_tabViewItem.tabState.rawValue = 0 if active, 1 if not active
@@ -2297,6 +2298,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                 }
             }
             self.mySpinner_ImageView.isHidden = button_status
+            self.stop_button.isHidden = button_status
             self.go_button.isEnabled = button_status
         }
         
@@ -2310,6 +2312,14 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             // clear previous results
             counters.removeAll()
         }
+    }
+    
+    @IBAction func stopButton(_ sender: Any) {
+        self.writeToHistory(stringOfText: "Migration was manually stopped.\n\n")
+        theOpQ.cancelAllOperations()
+        theCreateQ.cancelAllOperations()
+        goButtonEnabled(button_status: true)
+        
     }
     
     func getCurrentTime() -> String {
