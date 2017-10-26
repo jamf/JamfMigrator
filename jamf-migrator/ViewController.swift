@@ -39,6 +39,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var advcompsearch_button: NSButton!
     @IBOutlet weak var computers_button: NSButton!
     @IBOutlet weak var directory_bindings_button: NSButton!
+    @IBOutlet weak var dock_items_button: NSButton!
     @IBOutlet weak var fileshares_button: NSButton!
     @IBOutlet weak var sus_button: NSButton!
     @IBOutlet weak var netboot_button: NSButton!
@@ -99,6 +100,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var advcompsearch_label_field: NSTextField!
     @IBOutlet weak var computers_label_field: NSTextField!
     @IBOutlet weak var directory_bindings_field: NSTextField!
+    @IBOutlet weak var dock_items_field: NSTextField!
     @IBOutlet weak var file_shares_label_field: NSTextField!
     @IBOutlet weak var sus_label_field: NSTextField!
     @IBOutlet weak var netboot_label_field: NSTextField!
@@ -193,7 +195,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     var sourceURL = ""
     var destURL = ""
     
-    var endpointDefDict = ["computergroups":"computer_groups","directorybindings":"directory_bindings", "mobiledevicegroups":"mobile_device_groups", "usergroups":"user_groups", "userextensionattributes":"user_extension_attributes", "advancedusersearches":"advanced_user_searches"]
+    var endpointDefDict = ["computergroups":"computer_groups","directorybindings":"directory_bindings", "dockitems":"dock_items", "mobiledevicegroups":"mobile_device_groups", "usergroups":"user_groups", "userextensionattributes":"user_extension_attributes", "advancedusersearches":"advanced_user_searches"]
     var xmlName = ""
     var destEPs = [String:Int]()
     var currentEPs = [String:Int]()
@@ -216,7 +218,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var get_found_field: NSTextField!
     
     // This order must match the drop down for selective migration
-    var macOSEndpointArray: [String] = ["advancedcomputersearches", "computergroups", "computers", "osxconfigurationprofiles", "directorybindings", "computerextensionattributes", "distributionpoints", "netbootservers", "packages", "policies", "printers", "scripts", "softwareupdateservers"]
+    var macOSEndpointArray: [String] = ["advancedcomputersearches", "computergroups", "computers", "osxconfigurationprofiles", "directorybindings", "dockitems", "computerextensionattributes", "distributionpoints", "netbootservers", "packages", "policies", "printers", "scripts", "softwareupdateservers"]
     var iOSEndpointArray: [String] = ["advancedmobiledevicesearches", "mobiledeviceconfigurationprofiles", "mobiledevicegroups",  "mobiledeviceextensionattributes", "mobiledevices"]
     var generalEndpointArray: [String] = ["advancedusersearches", "buildings", "categories", "departments", "userextensionattributes", "jamfusers", "jamfgroups", "ldapservers", "networksegments", "sites", "users", "usergroups"]
     var AllEndpointsArray = [String]()
@@ -228,6 +230,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     var POSTsuccessCount: Int = 0
     var failedCount: Int = 0
     var postCount: Int = 1
+    var counters = Dictionary<String, Dictionary<String,Int>>()     // summary counters of created, updated, and failed objects
+
     
     @IBOutlet weak var mySpinner_ImageView: NSImageView!
     var theImage:[NSImage] = [NSImage(named: "0.png")!, NSImage(named: "1.png")!, NSImage(named: "2.png")!, NSImage(named: "3.png")!, NSImage(named: "4.png")!, NSImage(named: "5.png")!, NSImage(named: "6.png")!, NSImage(named: "7.png")!, NSImage(named: "8.png")!, NSImage(named: "9.png")!, NSImage(named: "10.png")!, NSImage(named: "11.png")!]
@@ -275,6 +279,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                 self.advcompsearch_button.state == 1
                     && self.computers_button.state == 1
                     && self.directory_bindings_button.state == 1
+                    && self.dock_items_button.state == 1
                     && self.fileshares_button.state == 1
                     && self.sus_button.state == 1
                     && self.netboot_button.state == 1
@@ -318,6 +323,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             self.advcompsearch_button.state = self.allNone_button.state
             self.computers_button.state = self.allNone_button.state
             self.directory_bindings_button.state = self.allNone_button.state
+            self.dock_items_button.state = self.allNone_button.state
             self.fileshares_button.state = self.allNone_button.state
             self.sus_button.state = self.allNone_button.state
             self.netboot_button.state = self.allNone_button.state
@@ -672,6 +678,10 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                     objectsToMigrate += ["directorybindings"]
                 }
                 
+                if dock_items_button.state == 1 {
+                    objectsToMigrate += ["dockitems"]
+                }
+                
                 if computers_button.state == 1 {
                     objectsToMigrate += ["computers"]
                 }
@@ -860,6 +870,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                     // create targetDataArray
                     for k in (0..<self.sourceDataArray.count) {
                         if self.srcSrvTableView.isRowSelected(k) {
+                            // prevent the removal of the account we're using
                             if !(selectedEndpoint == "jamfusers" && self.sourceDataArray[k].lowercased() == self.dest_user.lowercased()) {
                                 self.targetDataArray.append(self.sourceDataArray[k])
                             }
@@ -914,6 +925,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             endpointParent = "computer_extension_attributes"
         case "directorybindings":
             endpointParent = "directory_bindings"
+        case "dockitems":
+            endpointParent = "dock_items"
         case "computergroups":
             endpointParent = "computer_groups"
         case "distributionpoints":
@@ -1004,7 +1017,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                             if self.debug { self.writeToHistory(stringOfText: "[- debug -] endpointJSON: \(endpointJSON))") }
                             
                             switch endpoint {
-                            case "advancedcomputersearches", "buildings", "categories", "computers", "computerextensionattributes", "departments", "distributionpoints", "directorybindings", "ldapservers", "netbootservers", "networksegments", "osxconfigurationprofiles", "packages", "printers", "scripts", "sites", "softwareupdateservers", "users", "mobiledeviceconfigurationprofiles", "mobiledeviceapplications", "advancedmobiledevicesearches", "mobiledeviceextensionattributes", "mobiledevices", "userextensionattributes", "advancedusersearches":
+                            case "advancedcomputersearches", "buildings", "categories", "computers", "computerextensionattributes", "departments", "distributionpoints", "directorybindings", "dockitems", "ldapservers", "netbootservers", "networksegments", "osxconfigurationprofiles", "packages", "printers", "scripts", "sites", "softwareupdateservers", "users", "mobiledeviceconfigurationprofiles", "mobiledeviceapplications", "advancedmobiledevicesearches", "mobiledeviceextensionattributes", "mobiledevices", "userextensionattributes", "advancedusersearches":
                                 if let endpointInfo = endpointJSON[endpointParent] as? [Any] {
                                     let endpointCount: Int = endpointInfo.count
                                     if self.debug { self.writeToHistory(stringOfText: "[- debug -] Initial count for \(endpoint) found: \(endpointCount)\n") }
@@ -1204,11 +1217,19 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                     if self.goSender == "goButton" {
                                                         if !self.wipe_data  {
                                                             
-                                                            //need to call existingEndpoints here to keep proper order
+                                                            //need to call existingEndpoints here to keep proper order?
+                                                            if self.currentEPs[l_xmlName] != nil {
+                                                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) already exists\n") }
+                                                                self.endPointByID(endpoint: localEndpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: groupCount, action: "update", destEpId: self.currentEPs[l_xmlName]!)
+                                                            } else {
+                                                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) - create\n") }
+                                                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] function - endpoint: \(localEndpoint), endpointID: \(l_xmlID), endpointCurrent: \(counter), endpointCount: \(groupCount), action: \"create\", destEpId: 0\n") }
+                                                                self.endPointByID(endpoint: localEndpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: groupCount, action: "create", destEpId: 0)
+                                                            }
                                                             
-                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) - create\n") }
-                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] function - endpoint: \(endpoint), endpointID: \(l_xmlID), endpointCurrent: \(counter), endpointCount: \(endpointCount), action: \"create\", destEpId: 0\n") }
-                                                            self.endPointByID(endpoint: localEndpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: groupCount, action: "create", destEpId: 0)
+//                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) - create\n") }
+//                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] function - endpoint: \(endpoint), endpointID: \(l_xmlID), endpointCurrent: \(counter), endpointCount: \(endpointCount), action: \"create\", destEpId: 0\n") }
+//                                                            self.endPointByID(endpoint: localEndpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: groupCount, action: "create", destEpId: 0)
                                                         } else {
                                                             
                                                             self.RemoveEndpoints(endpointType: localEndpoint, endPointID: l_xmlID, endpointName: l_xmlName, endpointCurrent: counter, endpointCount: groupCount)
@@ -1463,7 +1484,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                         //                   print("\n\nRemoved id tag: \(XMLString)")
                         
                         switch endpoint {
-                        case "buildings", "departments", "sites", "categories", "directorybindings", "distributionpoints", "netbootservers", "softwareupdateservers", "computerextensionattributes", "scripts", "printers", "osxconfigurationprofiles", "mobiledeviceconfigurationprofiles", "mobiledeviceapplications", "advancedmobiledevicesearches", "mobiledeviceextensionattributes", "mobiledevicegroups", "smartiosgroups", "staticiosgroups", "mobiledevices", "smartusergroups", "staticusergroups", "userextensionattributes", "advancedusersearches":
+                        case "buildings", "departments", "sites", "categories", "directorybindings", "distributionpoints", "dockitems", "netbootservers", "softwareupdateservers", "computerextensionattributes", "scripts", "printers", "osxconfigurationprofiles", "mobiledeviceconfigurationprofiles", "mobiledeviceapplications", "advancedmobiledevicesearches", "mobiledeviceextensionattributes", "mobiledevicegroups", "smartiosgroups", "staticiosgroups", "mobiledevices", "smartusergroups", "staticusergroups", "userextensionattributes", "advancedusersearches":
                             if self.debug { self.writeToHistory(stringOfText: "[- debug -] processing \(endpoint) - verbose\n") }
                             //print("\nXML: \(PostXML)")
                             
@@ -1773,6 +1794,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             
             if endpointCurrent == 1 {
                 self.postCount = 1
+                // initial counters
+                self.counters[endpointType] = ["create":0, "update":0, "fail":0]
             } else {
                 self.postCount += 1
                 //print("destURL: \(DestURL)\n")
@@ -1831,6 +1854,9 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                         //                        print("\n\n---------- Success ----------")
                         //                        print("\(endPointXML)")
                         //                        print("---------- Success ----------")
+                        
+                        // update global counters
+                        self.counters[endpointType]?["\(action)"] = (self.counters[endpointType]?["\(action)"])!+1
                     } else {
                         // create failed
                         self.labelColor(endpoint: endpointType, theColor: self.yellowText)
@@ -1855,6 +1881,9 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                         if self.debug { self.writeToHistory(stringOfText: "[- debug -] ---------- response ----------\n\n") }
                         //                        401 - wrong username and/or password
                         //                        409 - unable to create object; already exists or data missing or xml error
+                        
+                        // update global counters
+                        self.counters[endpointType]?["fail"] = (self.counters[endpointType]?["fail"])!+1
                     }
                 }
                 if self.debug { self.writeToHistory(stringOfText: "[- debug -] POST or PUT Operation: \(request.httpMethod)\n") }
@@ -2005,6 +2034,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             endpointParent = "distribution_points"
         case "directorybindings":
             endpointParent = "directory_bindings"
+        case "dockitems":
+            endpointParent = "dock_items"
         case "netbootservers":
             endpointParent = "netboot_servers"
         case "osxconfigurationprofiles":
@@ -2018,6 +2049,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             endpointParent = "configuration_profiles"
         case "mobiledeviceextensionattributes":
             endpointParent = "mobile_device_extension_attributes"
+        case "mobiledevicegroups":
+            endpointParent = "mobile_device_groups"
         case "mobiledeviceapplications":
             endpointParent = "mobile_device_applications"
         case "mobiledevices":
@@ -2131,7 +2164,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                     if httpResponse.statusCode >= 199 && httpResponse.statusCode <= 299 {
                         //print(httpResponse.statusCode)
                         if self.debug { self.writeToHistory(stringOfText: "[- debug -] returning existing \(existingEndpointNode) endpoints: \(self.currentEPs)\n") }
-                        print("returning existing endpoints: \(self.currentEPs)")
+//                        print("returning existing endpoints: \(self.currentEPs)")
                         completion("\nCurrent endpoints - \(self.currentEPs)")
                     } else {
                         // something went wrong
@@ -2266,6 +2299,17 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             self.mySpinner_ImageView.isHidden = button_status
             self.go_button.isEnabled = button_status
         }
+        
+        print("button_status: \(button_status)")
+        if button_status {
+            // display summary of created, updated, and failed objects
+            if counters.count > 0 {
+                print("\(counters)")
+            }
+        } else {
+            // clear previous results
+            counters.removeAll()
+        }
     }
     
     func getCurrentTime() -> String {
@@ -2351,6 +2395,8 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             directory_bindings_field.textColor = theColor
         case "distributionpoints":
             file_shares_label_field.textColor = theColor
+        case "dockitems":
+            dock_items_field.textColor = theColor
         case "softwareupdateservers":
             sus_label_field.textColor = theColor
         case "netbootservers":
@@ -2591,6 +2637,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         advcompsearch_button.state = 1
         computers_button.state = 1
         directory_bindings_button.state = 1
+        dock_items_button.state = 1
         netboot_button.state = 1
         osxconfigurationprofiles_button.state = 1
         sus_button.state = 1

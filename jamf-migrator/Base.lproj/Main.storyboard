@@ -1013,7 +1013,7 @@
                                 <font key="font" metaFont="system"/>
                                 <tabViewItems>
                                     <tabViewItem label="macOS" identifier="1" id="Nof-Zl-FoE">
-                                        <view key="view" id="fn5-oe-BJC">
+                                        <view key="view" ambiguous="YES" id="fn5-oe-BJC">
                                             <rect key="frame" x="10" y="7" width="696" height="186"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -1128,7 +1128,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b5v-KK-ZKw" userLabel="File Shares (AFP/SMB)">
-                                                                        <rect key="frame" x="545" y="87" width="140" height="17"/>
+                                                                        <rect key="frame" x="548" y="90" width="140" height="17"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="File Shares (AFP/SMB)" id="uPY-59-Z8S" userLabel="File Shares (AFP/SMB)">
                                                                             <font key="font" metaFont="system"/>
@@ -1137,7 +1137,7 @@
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="maX-gS-OdH" userLabel="File Shares (AFP/SMB) btn">
-                                                                        <rect key="frame" x="524" y="85" width="154" height="20"/>
+                                                                        <rect key="frame" x="527" y="88" width="154" height="20"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <buttonCell key="cell" type="check" title="                                          " bezelStyle="regularSquare" imagePosition="left" inset="2" id="aWG-Vw-oWc">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1148,7 +1148,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TGh-dy-khY" userLabel="SUS">
-                                                                        <rect key="frame" x="545" y="109" width="37" height="17"/>
+                                                                        <rect key="frame" x="548" y="112" width="37" height="17"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="SUS" id="2U7-3I-wVG" userLabel="SUS">
                                                                             <font key="font" metaFont="system"/>
@@ -1157,7 +1157,7 @@
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Oq-z3-hPc" userLabel="SUS btn">
-                                                                        <rect key="frame" x="524" y="107" width="57" height="20"/>
+                                                                        <rect key="frame" x="527" y="110" width="57" height="20"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <buttonCell key="cell" type="check" title="                                          " bezelStyle="regularSquare" imagePosition="left" inset="2" id="2wh-TX-he0">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1248,7 +1248,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gyq-nN-Llg" userLabel="Netboot Servers">
-                                                                        <rect key="frame" x="545" y="132" width="103" height="17"/>
+                                                                        <rect key="frame" x="548" y="135" width="103" height="17"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Netboot Servers" id="tyP-dN-sR7" userLabel="Netboot Servers">
                                                                             <font key="font" metaFont="system"/>
@@ -1257,7 +1257,7 @@
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CA1-Zz-dcv" userLabel="Netboot Servers btn">
-                                                                        <rect key="frame" x="524" y="130" width="123" height="20"/>
+                                                                        <rect key="frame" x="527" y="133" width="123" height="20"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <buttonCell key="cell" type="check" title="                                          " bezelStyle="regularSquare" imagePosition="left" inset="2" id="0pr-tR-mGA">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1323,6 +1323,26 @@
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                             <font key="font" size="14" name="Helvetica"/>
                                                                         </buttonCell>
+                                                                    </button>
+                                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y2r-qc-GSV" userLabel="dock items fld">
+                                                                        <rect key="frame" x="375" y="66" width="102" height="17"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Dock Items" id="MAw-V6-H2m" userLabel="dock items">
+                                                                            <font key="font" metaFont="system"/>
+                                                                            <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                        </textFieldCell>
+                                                                    </textField>
+                                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="864-jA-QKf" userLabel="dock items btn">
+                                                                        <rect key="frame" x="355" y="64" width="91" height="20"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                        <buttonCell key="cell" type="check" title="                                          " bezelStyle="regularSquare" imagePosition="left" inset="2" id="c2t-nq-Bdl">
+                                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                            <font key="font" size="14" name="Helvetica"/>
+                                                                        </buttonCell>
+                                                                        <connections>
+                                                                            <action selector="toggleAllNone:" target="XfG-lQ-9wD" id="9XO-hZ-EaL"/>
+                                                                        </connections>
                                                                     </button>
                                                                 </subviews>
                                                             </view>
@@ -1827,7 +1847,7 @@
                                         <accessibility description="general" identifier="general"/>
                                     </tabViewItem>
                                     <tabViewItem label="Selective" identifier="3" id="Fo1-1P-mP5">
-                                        <view key="view" ambiguous="YES" id="TA8-Ho-89h">
+                                        <view key="view" id="TA8-Ho-89h">
                                             <rect key="frame" x="10" y="7" width="696" height="186"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -1971,6 +1991,9 @@
                                                                         <menuItem title="Directory Bindings" id="0Kb-4Y-MlD">
                                                                             <modifierMask key="keyEquivalentModifierMask"/>
                                                                         </menuItem>
+                                                                        <menuItem title="Dock Items" id="X9I-p1-P7q">
+                                                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        </menuItem>
                                                                         <menuItem title="Extension Attributes" id="Abg-uI-loX"/>
                                                                         <menuItem title="File Shares" id="TiA-cD-OrE"/>
                                                                         <menuItem title="Netboot Servers" id="e78-AX-SO6"/>
@@ -2084,6 +2107,8 @@
                         <outlet property="dest_user_field" destination="U40-E2-DvW" id="zbJ-fX-KP1"/>
                         <outlet property="directory_bindings_button" destination="tfr-3a-8nS" id="Me9-JY-iHK"/>
                         <outlet property="directory_bindings_field" destination="Jh1-S4-tyb" id="6iu-zl-ABJ"/>
+                        <outlet property="dock_items_button" destination="864-jA-QKf" id="XMw-sV-FPV"/>
+                        <outlet property="dock_items_field" destination="y2r-qc-GSV" id="xIM-vA-Lbj"/>
                         <outlet property="ext_attribs_button" destination="hPA-qy-uIr" id="ztY-kw-YX2"/>
                         <outlet property="extension_attributes_label_field" destination="c4g-bk-XZJ" id="UKZ-VJ-d26"/>
                         <outlet property="file_shares_label_field" destination="b5v-KK-ZKw" id="cRu-fH-njt"/>
