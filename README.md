@@ -31,6 +31,11 @@ A more detailed review of migration successes/failures can be found in the log, 
 
 
 ## History
+**jamf-migrator v2.1.5**<p>
+* Added migration of dock items.
+* Added stop button to stop the migration in progess.
+  
+  
 **jamf-migrator v2.1.4**<p>
 * Added migration of directory bindings.
   
