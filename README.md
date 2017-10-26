@@ -3,7 +3,7 @@ A tool to migrate data granularly between Jamf Pro servers
 
 ![alt text](https://github.com/jamfprofessionalservices/JamfMigrator/blob/master/jamf-migrator/images/migrator2.png "JamfMigrator")
 
-Download: [JamfMigrator](https://github.com/jamfprofessionalservices/JamfMigrator/releases/download/v2.1.3/jamf-migrator.zip)
+Download: [JamfMigrator](https://github.com/jamfprofessionalservices/JamfMigrator/releases/download/v2.1.4/jamf-migrator.zip)
 
 Feedback in the GUI gives a simplistic overview of the success of a transfer:
 * Green - everything transferred.
@@ -14,7 +14,7 @@ Feedback in the GUI gives a simplistic overview of the success of a transfer:
 
 A more detailed review of migration successes/failures can be found in the log, located in `~/Library/Application Support/jamf-migrator/history/<date>_<time>_migration.txt.`
 
-**Note:** the app can also be used to clear out a Jamf server.  Typing the following after launching the app will remove items from the destination server.
+**Note:** the app can also be used to clear out a Jamf server.  Typing the following after launching the app will set it into removal mode.  Items from the destination server are deleted once Go is clicked.
 
 ```touch ~/Library/Application\ Support/jamf-migrator/DELETE```
 
@@ -31,6 +31,10 @@ A more detailed review of migration successes/failures can be found in the log, 
 
 
 ## History
+**jamf-migrator v2.1.4**<p>
+* Added migration of directory bindings.
+  
+  
 **jamf-migrator v2.1.3**<p>
 * Fixed smart group migration failures when done selectively.
 * Fixed advanced computer search duplication if migrated more then once, they should update now if changed.
