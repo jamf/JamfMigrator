@@ -1446,67 +1446,100 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                             self.nameIdDict(server: self.dest_jp_server, endPoint: "packages", id: "destId") {
                                                 (result: [String:Dictionary<String,Int>]) in
                                                 self.packages_id_map = result
-                                                print("packages id map:\n\(self.bindings_id_map)\n")
+                                                print("packages id map:\n\(self.packages_id_map)\n")
                                                 self.idDict.removeAll()
-                                        
-                                                self.existingEndpoints(destEndpoint: "\(endpoint)")  {
-                                                    (result: String) in
-                                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] Returned from existing \(endpoint): \(result)\n") }
+                                                
+                                                self.nameIdDict(server: self.source_jp_server, endPoint: "scripts", id: "sourceId") {
+                                                    (result: [String:Dictionary<String,Int>]) in
                                                     
-                                                    for i in (0..<endpointCount) {
-                                                        if i == 0 { self.availableObjsToMigDict.removeAll() }
+                                                    self.nameIdDict(server: self.dest_jp_server, endPoint: "scripts", id: "destId") {
+                                                        (result: [String:Dictionary<String,Int>]) in
+                                                        self.scripts_id_map = result
+                                                        print("scripts id map:\n\(self.scripts_id_map)\n")
+                                                        self.idDict.removeAll()
                                                         
-                                                        let record = endpointInfo[i] as! [String : AnyObject]
-                                                        
-                                                        self.availableObjsToMigDict[record["id"] as! Int] = record["name"] as! String?
-                                                        
-                                                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] Current number of \(endpoint) to process: \(self.availableObjsToMigDict.count)\n") }
-                                                    }   // for i in (0..<endpointCount) end
-                                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] Found total of \(self.availableObjsToMigDict.count) \(endpoint) to process\n") }
-                                                    
-                                                    var counter = 1
-                                                    if self.goSender == "goButton" {
-                                                        for (l_xmlID, l_xmlName) in self.availableObjsToMigDict {
-                                                            if !self.wipe_data  {
-                                                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] check for ID on \(l_xmlName): \(self.currentEPs[l_xmlName] ?? 0)\n") }
-                                                                if self.currentEPs[l_xmlName] != nil {
-                                                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) already exists\n") }
-                                                                    //self.currentEndpointID = self.currentEPs[l_xmlName]!
-                                                                    self.endPointByID(endpoint: endpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count, action: "update", destEpId: self.currentEPs[l_xmlName]!)
-                                                                } else {
-                                                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) - create\n") }
-                                                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] function - endpoint: \(endpoint), endpointID: \(l_xmlID), endpointCurrent: \(counter), endpointCount: \(endpointCount), action: \"create\", destEpId: 0\n") }
-                                                                    self.endPointByID(endpoint: endpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count, action: "create", destEpId: 0)
-                                                                }
-                                                            } else {
-                                                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] remove - endpoint: \(endpoint)\t endpointID: \(l_xmlID)\t endpointName: \(l_xmlName)\n") }
-                                                                self.RemoveEndpoints(endpointType: endpoint, endPointID: l_xmlID, endpointName: l_xmlName, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count)
-                                                            }   // if !self.wipe_data else - end
-                                                            counter+=1
-                                                        }   // for (l_xmlID, l_xmlName) in availableObjsToMigDict
-                                                    } else {
-                                                        // populate source server under the selective tab
-                                                        for (l_xmlID, l_xmlName) in self.availableObjsToMigDict {
-                                                            DispatchQueue.main.async {
-                                                                //print("adding \(l_xmlName) to array")
-                                                                self.availableIDsToMigDict[l_xmlName] = l_xmlID
-                                                                self.sourceDataArray.append(l_xmlName)
-                                                                
-                                                                self.srcSrvTableView.reloadData()
-                                                                
-                                                            }   // DispatchQueue.main.async - end
-                                                            counter+=1
-                                                        }   // for (l_xmlID, l_xmlName) in availableObjsToMigDict
-                                                        DispatchQueue.main.async {
-                                                            //self.sourceDataArray.sort()
-                                                            self.sourceDataArray = self.sourceDataArray.sorted{$0.localizedCompare($1) == .orderedAscending}
+                                                        self.nameIdDict(server: self.source_jp_server, endPoint: "printers", id: "sourceId") {
+                                                            (result: [String:Dictionary<String,Int>]) in
                                                             
-                                                            self.srcSrvTableView.reloadData()
-                                                        }
-                                                    }   // if self.goSender else - end
-                                                }   // self.existingEndpoints - end
-                                            }
-                                        }
+                                                            self.nameIdDict(server: self.dest_jp_server, endPoint: "printers", id: "destId") {
+                                                                (result: [String:Dictionary<String,Int>]) in
+                                                                self.printers_id_map = result
+                                                                print("printers id map:\n\(self.printers_id_map)\n")
+                                                                self.idDict.removeAll()
+                                                                
+                                                                self.nameIdDict(server: self.source_jp_server, endPoint: "directorybindings", id: "sourceId") {
+                                                                    (result: [String:Dictionary<String,Int>]) in
+                                                                    
+                                                                    self.nameIdDict(server: self.dest_jp_server, endPoint: "directorybindings", id: "destId") {
+                                                                        (result: [String:Dictionary<String,Int>]) in
+                                                                        self.bindings_id_map = result
+                                                                        print("bindings id map:\n\(self.bindings_id_map)\n")
+                                                                        self.idDict.removeAll()
+                                                
+                                                                        self.existingEndpoints(destEndpoint: "\(endpoint)")  {
+                                                                            (result: String) in
+                                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Returned from existing \(endpoint): \(result)\n") }
+                                                                            
+                                                                            for i in (0..<endpointCount) {
+                                                                                if i == 0 { self.availableObjsToMigDict.removeAll() }
+                                                                                
+                                                                                let record = endpointInfo[i] as! [String : AnyObject]
+                                                                                
+                                                                                self.availableObjsToMigDict[record["id"] as! Int] = record["name"] as! String?
+                                                                                
+                                                                                if self.debug { self.writeToHistory(stringOfText: "[- debug -] Current number of \(endpoint) to process: \(self.availableObjsToMigDict.count)\n") }
+                                                                            }   // for i in (0..<endpointCount) end
+                                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Found total of \(self.availableObjsToMigDict.count) \(endpoint) to process\n") }
+                                                                            
+                                                                            var counter = 1
+                                                                            if self.goSender == "goButton" {
+                                                                                for (l_xmlID, l_xmlName) in self.availableObjsToMigDict {
+                                                                                    if !self.wipe_data  {
+                                                                                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] check for ID on \(l_xmlName): \(self.currentEPs[l_xmlName] ?? 0)\n") }
+                                                                                        if self.currentEPs[l_xmlName] != nil {
+                                                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) already exists\n") }
+                                                                                            //self.currentEndpointID = self.currentEPs[l_xmlName]!
+                                                                                            self.endPointByID(endpoint: endpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count, action: "update", destEpId: self.currentEPs[l_xmlName]!)
+                                                                                        } else {
+                                                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] \(l_xmlName) - create\n") }
+                                                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] function - endpoint: \(endpoint), endpointID: \(l_xmlID), endpointCurrent: \(counter), endpointCount: \(endpointCount), action: \"create\", destEpId: 0\n") }
+                                                                                            self.endPointByID(endpoint: endpoint, endpointID: l_xmlID, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count, action: "create", destEpId: 0)
+                                                                                        }
+                                                                                    } else {
+                                                                                        if self.debug { self.writeToHistory(stringOfText: "[- debug -] remove - endpoint: \(endpoint)\t endpointID: \(l_xmlID)\t endpointName: \(l_xmlName)\n") }
+                                                                                        self.RemoveEndpoints(endpointType: endpoint, endPointID: l_xmlID, endpointName: l_xmlName, endpointCurrent: counter, endpointCount: self.availableObjsToMigDict.count)
+                                                                                    }   // if !self.wipe_data else - end
+                                                                                    counter+=1
+                                                                                }   // for (l_xmlID, l_xmlName) in availableObjsToMigDict
+                                                                            } else {
+                                                                                // populate source server under the selective tab
+                                                                                for (l_xmlID, l_xmlName) in self.availableObjsToMigDict {
+                                                                                    DispatchQueue.main.async {
+                                                                                        //print("adding \(l_xmlName) to array")
+                                                                                        self.availableIDsToMigDict[l_xmlName] = l_xmlID
+                                                                                        self.sourceDataArray.append(l_xmlName)
+                                                                                        
+                                                                                        self.srcSrvTableView.reloadData()
+                                                                                        
+                                                                                    }   // DispatchQueue.main.async - end
+                                                                                    counter+=1
+                                                                                }   // for (l_xmlID, l_xmlName) in availableObjsToMigDict
+                                                                                DispatchQueue.main.async {
+                                                                                    //self.sourceDataArray.sort()
+                                                                                    self.sourceDataArray = self.sourceDataArray.sorted{$0.localizedCompare($1) == .orderedAscending}
+                                                                                    
+                                                                                    self.srcSrvTableView.reloadData()
+                                                                                }
+                                                                            }   // if self.goSender else - end
+                                                                        }   // self.existingEndpoints - end
+                                                                    }   // self.nameIdDict(server: self.dest_jp_server - bindings end
+                                                                }   // self.nameIdDict(server: self.source_jp_server - bindings end
+                                                            }   // self.nameIdDict(server: self.dest_jp_server - printers end
+                                                        }   // self.nameIdDict(server: self.source_jp_server - printers end
+                                                    }   // self.nameIdDict(server: self.dest_jp_server - scripts end
+                                                }   // self.nameIdDict(server: self.source_jp_server - scripts end
+                                            }   // self.nameIdDict(server: self.dest_jp_server - packages end
+                                        }   // self.nameIdDict(server: self.source_jp_server - packages end
                                             } else {
                                                 if endpoint == self.objectsToMigrate.last {
                                                     self.rmDELETE()
@@ -1649,6 +1682,28 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                     let destId = itemIds["destId"]
                                     let regexComp = try! NSRegularExpression(pattern: "<package><id>\(sourceId ?? 0)</id><name>\(item)</name>", options:.caseInsensitive)
                                     PostXML = regexComp.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "<package><id>\(destId ?? 0)</id><name>\(item)</name>")
+                                }
+                                for (item,itemIds) in self.scripts_id_map {
+                                    let sourceId = itemIds["sourceId"]
+                                    let destId = itemIds["destId"]
+                                    let regexComp = try! NSRegularExpression(pattern: "<script><id>\(sourceId ?? 0)</id><name>\(item)</name>", options:.caseInsensitive)
+                                    PostXML = regexComp.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "<script><id>\(destId ?? 0)</id><name>\(item)</name>")
+                                }
+                                for (item,itemIds) in self.printers_id_map {
+                                    let sourceId = itemIds["sourceId"]
+                                    let destId = itemIds["destId"]
+                                    let regexComp = try! NSRegularExpression(pattern: "<printer><id>\(sourceId ?? 0)</id><name>\(item)</name>", options:.caseInsensitive)
+                                    PostXML = regexComp.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "<printer><id>\(destId ?? 0)</id><name>\(item)</name>")
+                                }
+                                for (item,itemIds) in self.bindings_id_map {
+                                    let sourceId = itemIds["sourceId"]
+                                    let destId = itemIds["destId"]
+                                    let regexComp = try! NSRegularExpression(pattern: "<directory_bindings><id>\(sourceId ?? 0)</id><name>\(item)</name>", options:.caseInsensitive)
+                                    PostXML = regexComp.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "<directory_bindings><id>\(destId ?? 0)</id><name>\(item)</name>")
+                                }
+
+                                for xmlTag in ["script_contents", "script_contents_encoded"] {
+                                    PostXML = self.rmXmlData(theXML: PostXML, theTag: xmlTag)
                                 }
                                 
                             default: break
