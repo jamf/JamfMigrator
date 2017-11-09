@@ -77,6 +77,9 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     @IBOutlet weak var jamfUserAccounts_button: NSButton!
     @IBOutlet weak var jamfGroupAccounts_button: NSButton!
     
+    @IBOutlet weak var sourceServerList_button: NSPopUpButton!
+    @IBOutlet weak var destServerList_button: NSPopUpButton!
+    
     @IBOutlet weak var go_button: NSButton!
     @IBOutlet weak var stop_button: NSButton!
     
@@ -187,6 +190,9 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     var historyFile: String = ""
     let historyPath:String? = (NSHomeDirectory() + "/Library/Application Support/jamf-migrator/history/")
     var historyFileW: FileHandle?  = FileHandle(forUpdatingAtPath: "")
+    
+    var sourceServerArray = [String]()
+    var destServerArray = [String]()
     
     // credentials
     var sourceCreds = ""
@@ -529,12 +535,14 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                     NSLog("Source server authentication failure.")
                     return
                 } else {
+                    self.updateServerArray(url: self.source_jp_server, serverList: "source_server_array", theArray: self.sourceServerArray)
                     self.authCheck(f_sourceURL: self.dest_jp_server, f_credentials: self.destBase64Creds)  {
                         (result: Bool) in
                         if !result {
                             NSLog("Destination server authentication failure.")
                             return
                         } else {
+                            self.updateServerArray(url: self.dest_jp_server, serverList: "dest_server_array", theArray: self.destServerArray)
                             // verify source server URL - start
                             let sourceURL = URL(string: self.source_jp_server_field.stringValue)
                             let task_sourceURL = URLSession.shared.dataTask(with: sourceURL!) { _, response, _ in
@@ -2668,7 +2676,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             })  // let task = session - end
             task.resume()
         }   // authQ - end
-    }   // func authCheck - end
+    }   // func checkURL2 - end
     
     func clearProcessingFields() {
         DispatchQueue.main.async {
@@ -2929,13 +2937,57 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         }
     }
     
-    func SaveSettings() {
+    func saveSettings() {
         plistData["source_jp_server"] = source_jp_server_field.stringValue as AnyObject?
         plistData["source_user"] = source_user_field.stringValue as AnyObject?
         plistData["dest_jp_server"] = dest_jp_server_field.stringValue as AnyObject?
         plistData["dest_user"] = dest_user_field.stringValue as AnyObject?
         plistData["maxHistory"] = maxHistory as AnyObject?
         (plistData as NSDictionary).write(toFile: plistPath!, atomically: false)
+    }
+    
+    func updateServerArray(url: String, serverList: String, theArray: [String]) {
+        print("update server list: \(serverList)")
+        var local_serverArray = theArray
+        let positionInList = local_serverArray.index(of: url)
+        if positionInList == nil {
+                local_serverArray.insert(url, at: 0)
+        } else if positionInList! > 0 {
+            local_serverArray.remove(at: positionInList!)
+            local_serverArray.insert(url, at: 0)
+        }
+        while local_serverArray.count > 10 {
+            local_serverArray.removeLast()
+        }
+        plistData[serverList] = local_serverArray as AnyObject?
+        (plistData as NSDictionary).write(toFile: plistPath!, atomically: false)
+        switch serverList {
+        case "source_server_array":
+            self.sourceServerList_button.removeAllItems()
+            for theServer in local_serverArray {
+                self.sourceServerList_button.addItems(withTitles: [theServer])
+            }
+            self.sourceServerArray = local_serverArray
+        case "dest_server_array":
+            self.destServerList_button.removeAllItems()
+            for theServer in local_serverArray {
+                self.destServerList_button.addItems(withTitles: [theServer])
+            }
+            self.destServerArray = local_serverArray
+        default: break
+        }
+        
+    }
+    
+    @IBAction func setServerUrl_button(_ sender: NSPopUpButton) {
+//        print("sender: \(sender.tag)")
+        switch sender.tag {
+        case 0:
+            self.source_jp_server_field.stringValue = sourceServerList_button.titleOfSelectedItem!
+        case 1:
+            self.dest_jp_server_field.stringValue = destServerList_button.titleOfSelectedItem!
+        default: break
+        }
     }
     
     func writeToHistory(stringOfText: String) {
@@ -3028,6 +3080,18 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         }
         if plistData["maxHistory"] != nil {
             maxHistory = plistData["maxHistory"] as! Int
+        }
+        if plistData["source_server_array"] != nil {
+            sourceServerArray = plistData["source_server_array"] as! [String]
+            for theServer in sourceServerArray {
+                self.sourceServerList_button.addItems(withTitles: [theServer])
+            }
+        }
+        if plistData["dest_server_array"] != nil {
+            destServerArray = plistData["dest_server_array"] as! [String]
+            for theServer in destServerArray {
+                self.destServerList_button.addItems(withTitles: [theServer])
+            }
         }
         // read environment settings - end
         
@@ -3182,7 +3246,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     
     override func viewDidDisappear() {
         // Insert code here to tear down your application
-        SaveSettings()
+        saveSettings()
         historyCleanup()
     }
     
