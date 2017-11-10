@@ -263,6 +263,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
     var printers_id_map = [String:Dictionary<String,Int>]()
     var scripts_id_map = [String:Dictionary<String,Int>]()
     var configObjectsDict = [String:Dictionary<String,String>]()
+    var orphanIds = [String]()
     var idDict = [String:Dictionary<String,Int>]()
     
     var wipe_data: Bool = false
@@ -1490,13 +1491,13 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                                             self.bindings_id_map = result
                                                                             if self.debug { self.writeToHistory(stringOfText: "[- debug -] bindings id map:\n\(self.bindings_id_map)\n")}
                                                                             self.idDict.removeAll()
-    //                                        self.nameIdMappings() {
-    //                                            (result: String) in
-                                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] Create Id Mappings - end.\n") }
+
+                                                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] Create Id Mappings - end.\n") }
                                                                             
-                                                                            print("1 - ordered config IDs: \(self.configObjectsDict)\t count: \(self.configObjectsDict.count)\n")
+                                                                            print("config:\n \(self.configObjectsDict)\t count: \(self.configObjectsDict.count)\n")
                                                                             var orderedConfArray = [String]()
                                                                             var movedParentArray = [String]()
+                                                                            self.orphanIds.removeAll()
                                                                             //                                        var remainingConfigsArray = [String]()
                                                                             
                                                                             while self.configObjectsDict.count != movedParentArray.count {
@@ -1504,13 +1505,20 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                                                     if ((self.configObjectsDict[key]?["type"] == "Standard") && (movedParentArray.index(of: key) == nil)) || ((movedParentArray.index(of: key) == nil) && (movedParentArray.index(of: (self.configObjectsDict[key]?["parent"])!) != nil)) {
                                                                                         orderedConfArray.append((self.configObjectsDict[key]?["id"])!)
                                                                                         movedParentArray.append(key)
+                                                                                        // look for configs missing their parent
+                                                                                    } else if (((self.configObjectsDict[key]?["type"])! == "Smart") && (self.configObjectsDict[(self.configObjectsDict[key]?["parent"])!]?.count == nil)) && (movedParentArray.index(of: key) == nil) {
+                                                                                        self.writeToHistory(stringOfText: "Orphaned config: \(self.configObjectsDict[key]?["parent"] ?? "name not found")\n")
+                                                                                        orderedConfArray.append((self.configObjectsDict[key]?["id"])!)
+                                                                                        movedParentArray.append(key)
+                                                                                        self.orphanIds.append((self.configObjectsDict[key]?["id"])!)
                                                                                     }
+                                                                                    print("moved parent array:\n\(movedParentArray)")
                                                                                 }
                                                                             }
                                                                             if self.wipe_data {
                                                                                 orderedConfArray.reverse()
                                                                             }
-                                                                            print("parent array: \(orderedConfArray)")
+//                                                                            print("parent array: \(orderedConfArray)")
                                                                             
                                                                             self.existingEndpoints(destEndpoint: "\(endpoint)")  {
                                                                                 (result: String) in
@@ -1586,9 +1594,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                                                                 }   // if self.goSender else - end
                                                                             }   // self.existingEndpoints - end
                                             
-                                                
-    //                                        }   //self.nameIdMappings - end
-    //                                        }
                                                                         }   // self.nameIdDict(server: self.dest_jp_server - bindings end
                                                                     }   // self.nameIdDict(server: self.source_jp_server - bindings end
                                                                 }   // self.nameIdDict(server: self.dest_jp_server - printers end
@@ -1756,6 +1761,12 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                     let destId = itemIds["destId"]
                                     let regexComp = try! NSRegularExpression(pattern: "<directory_bindings><id>\(sourceId ?? 0)</id><name>\(item)</name>", options:.caseInsensitive)
                                     PostXML = regexComp.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "<directory_bindings><id>\(destId ?? 0)</id><name>\(item)</name>")
+                                }
+                                if self.orphanIds.index(of: "\(endpointID)") != nil {
+                                    let regexComp = try! NSRegularExpression(pattern: "<type>Smart<type>", options:.caseInsensitive)
+                                    PostXML = regexComp.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "<type>Standard<type>")
+                                    let regexComp2 = try! NSRegularExpression(pattern: "<parent>(.*?)</parent>", options:.caseInsensitive)
+                                    PostXML = regexComp2.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "")
                                 }
 
                                 for xmlTag in ["script_contents", "script_contents_encoded", "ppd_contents"] {
@@ -2149,10 +2160,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         default:
             localEndPointType = endpointType
         }
-        //        var localEndPointType = endpointType
-        //        if endpointType == "smartcomputergroups" || endpointType == "staticcomputergroups" {
-        //            localEndPointType = "computergroups"
-        //        }
+
         if endpointName != "All Managed Clients" && endpointName != "All Managed Servers" && endpointName != "All Managed iPads" && endpointName != "All Managed iPhones" && endpointName != "All Managed iPod touches" {
             
             theOpQ.addOperation {
@@ -2423,53 +2431,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         }   // destEPQ - end
     }
     
-//    func nameIdMappings(completion: @escaping (_ result: String) -> Void) {
-////        theOpQ.addOperation {
-//        idMapQ.sync {
-//            self.nameIdDict(server: self.source_jp_server, endPoint: "packages", id: "sourceId") {
-//                (result: [String:Dictionary<String,Int>]) in
-//                self.nameIdDict(server: self.dest_jp_server, endPoint: "packages", id: "destId") {
-//                    (result: [String:Dictionary<String,Int>]) in
-//                    self.packages_id_map = result
-//                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] --- packages id map:\n\(self.packages_id_map)\n") }
-//                    self.idDict.removeAll()
-//
-//                    self.nameIdDict(server: self.source_jp_server, endPoint: "scripts", id: "sourceId") {
-//                        (result: [String:Dictionary<String,Int>]) in
-//                        self.nameIdDict(server: self.dest_jp_server, endPoint: "scripts", id: "destId") {
-//                            (result: [String:Dictionary<String,Int>]) in
-//                            self.scripts_id_map = result
-//                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] --- scripts id map:\n\(self.scripts_id_map)\n") }
-//                            self.idDict.removeAll()
-//
-//                            self.nameIdDict(server: self.source_jp_server, endPoint: "printers", id: "sourceId") {
-//                                (result: [String:Dictionary<String,Int>]) in
-//                                self.nameIdDict(server: self.dest_jp_server, endPoint: "printers", id: "destId") {
-//                                    (result: [String:Dictionary<String,Int>]) in
-//                                    self.printers_id_map = result
-//                                    if self.debug { self.writeToHistory(stringOfText: "[- debug -] --- printers id map:\n\(self.printers_id_map)\n") }
-//                                    self.idDict.removeAll()
-//
-//                                    self.nameIdDict(server: self.source_jp_server, endPoint: "directorybindings", id: "sourceId") {
-//                                        (result: [String:Dictionary<String,Int>]) in
-//                                        self.nameIdDict(server: self.dest_jp_server, endPoint: "directorybindings", id: "destId") {
-//                                            (result: [String:Dictionary<String,Int>]) in
-//                                            self.bindings_id_map = result
-//                                            if self.debug { self.writeToHistory(stringOfText: "[- debug -] --- bindings id map:\n\(self.bindings_id_map)\n") }
-//                                            self.idDict.removeAll()
-//
-//                                        }   // self.nameIdDict(server: self.dest_jp_server - bindings end
-//                                    }   // self.nameIdDict(server: self.source_jp_server - bindings end
-//                                }   // self.nameIdDict(server: self.dest_jp_server - printers end
-//                            }   // self.nameIdDict(server: self.source_jp_server - printers end
-//                        }   // self.nameIdDict(server: self.dest_jp_server - scripts end
-//                    }   // self.nameIdDict(server: self.source_jp_server - scripts end
-//                }   // self.nameIdDict(server: self.dest_jp_server - packages end
-//            }   // self.nameIdDict(server: self.source_jp_server - packages end
-//
-//        }   // theOpQ - end
-//        completion("Id Mappings Created.")
-//    }
     
     func nameIdDict(server: String, endPoint: String, id: String, completion: @escaping (_ result: [String:Dictionary<String,Int>]) -> Void) {
         URLCache.shared.removeAllCachedResponses()
@@ -2486,7 +2447,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         
         let semaphore = DispatchSemaphore(value: 1)
         idMapQ.async {
-//        theOpQ.addOperation {
         
             let serverEncodedURL = NSURL(string: serverUrl)
             let serverRequest = NSMutableURLRequest(url: serverEncodedURL! as URL)
