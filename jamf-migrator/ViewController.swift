@@ -1768,7 +1768,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
                                     let regexComp2 = try! NSRegularExpression(pattern: "<parent>(.*?)</parent>", options:.caseInsensitive)
                                     PostXML = regexComp2.stringByReplacingMatches(in: PostXML, options: [], range: NSRange(0..<PostXML.utf16.count), withTemplate: "")
                                 }
-
                                 for xmlTag in ["script_contents", "script_contents_encoded", "ppd_contents"] {
                                     PostXML = self.rmXmlData(theXML: PostXML, theTag: xmlTag)
                                 }
@@ -2874,8 +2873,6 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
             print("function labelColor: unknown label - \(endpoint)")
         }
     }
-    
-    
     
     func rmXmlData(theXML: String, theTag: String) -> String {
         
