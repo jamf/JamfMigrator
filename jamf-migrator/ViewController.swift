@@ -2741,7 +2741,7 @@ class ViewController: NSViewController, URLSessionDelegate, NSTableViewDelegate,
         if LogLevel.debug { WriteToLog().message(stringOfText: "[endPointByID] enter\n") }
         
         saveRawXml      = xmlPrefOptions["saveRawXml"]!
-        saveRawXmlScope = xmlPrefOptions["saveRawXmlScope"]!
+        saveRawXmlScope = (xmlPrefOptions["saveRawXmlScope"] != nil)
 
         URLCache.shared.removeAllCachedResponses()
         if LogLevel.debug { WriteToLog().message(stringOfText: "[endPointByID] endpoint passed to endPointByID: \(endpoint)\n") }
