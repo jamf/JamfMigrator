@@ -233,6 +233,7 @@ class RemoveObjects: NSObject, URLSessionDelegate {
                 defer { semaphore.signal() }
                 session.finishTasksAndInvalidate()
                 if let httpResponse = response as? HTTPURLResponse {
+                    if LogLevel.debug { WriteToLog.shared.message("[RemoveObjects.process] response statusCode: \(httpResponse.statusCode)") }
                     if let _ = String(data: data!, encoding: .utf8) {
                         responseData = String(data: data!, encoding: .utf8)!
                     } else {
