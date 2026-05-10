@@ -319,7 +319,11 @@ class EndpointData: NSObject, URLSessionDelegate {
                                     if LogLevel.debug { WriteToLog.shared.message("[getById] Returned from cleanupXml") }
                                 }
                                 // check progress
-                                Endpoints.countDict[endpoint]! -= 1
+                                if let _ = Endpoints.countDict[endpoint] {
+                                    Endpoints.countDict[endpoint]! -= 1
+                                } else {
+                                    Endpoints.countDict[endpoint] = 0
+                                }
                                 if Endpoints.countDict[endpoint] == 0 {
 
                                     Endpoints.countDict[endpoint] = nil
