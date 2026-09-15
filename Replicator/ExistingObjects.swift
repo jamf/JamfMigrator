@@ -424,4 +424,8 @@ class ExistingObjects: NSObject, URLSessionDelegate {
             completion(("Current endpoints - export.saveOnly, not needed.","\(theDestEndpoint)"))
         }
     }
+
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+    }
 }

@@ -319,7 +319,11 @@ class EndpointData: NSObject, URLSessionDelegate {
                                     if LogLevel.debug { WriteToLog.shared.message("[getById] Returned from cleanupXml") }
                                 }
                                 // check progress
-                                Endpoints.countDict[endpoint]! -= 1
+                                if let _ = Endpoints.countDict[endpoint] {
+                                    Endpoints.countDict[endpoint]! -= 1
+                                } else {
+                                    Endpoints.countDict[endpoint] = 0
+                                }
                                 if Endpoints.countDict[endpoint] == 0 {
 
                                     Endpoints.countDict[endpoint] = nil
@@ -363,6 +367,10 @@ class EndpointData: NSObject, URLSessionDelegate {
                 }   // endpointsIdQ - end
             }
         }
+    }
+
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
 }
 

@@ -399,4 +399,8 @@ class PackagesDelegate: NSObject, URLSessionDelegate {
 //                            WriteToLog.shared.message("[PackageDelegate.filenameIdDict] Duplicate references to the same package were found on \(theServer)\n\(message)")
         }
     }
+
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+    }
 }
